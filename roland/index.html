@@ -1271,7 +1271,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       '<div class="q-split"><div style="display:flex;flex-direction:column;gap:16px;min-width:0">' +
       '<section class="card"><h2 style="margin-bottom:10px">Customer</h2><div class="form-grid">' +
       field('qf-company', 'Company', inp('qf-company', 'qf:company', f), true) + field('qf-cname', 'Contact name', inp('qf-cname', 'qf:contactName', f), true) +
-      field('qf-crole', 'Role', inp('qf-crole', 'qf:contactRole', f)) + field('qf-email', 'Email', inp('qf-email', 'qf:email', f, ' type="email"'), false, 'Needed for the email draft') +
+      field('qf-crole', 'Role', inp('qf-crole', 'qf:contactRole', f)) + field('qf-email', 'Email', inp('qf-email', 'qf:email', f, ' type="text" inputmode="email" autocomplete="email"'), false, 'Needed for the email draft') +
       field('qf-phone', 'Phone', inp('qf-phone', 'qf:phone', f, ' type="tel"')) + field('qf-address', 'Delivery address', inp('qf-address', 'qf:address', f)) + field('qf-city', 'Town or city', inp('qf-city', 'qf:city', f)) +
       '</div></section>' +
       '<section class="card"><h2 style="margin-bottom:10px">Supply</h2><div class="form-grid">' +
@@ -1291,13 +1291,25 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
         field('qf-funit', 'Freight unit', sel('qf-funit', 'qf:freightUnit', f, [{ v: '$/t', t: 'per tonne' }, { v: '$/km', t: 'per kilometre' }])) : '') +
       field('qf-review', 'Price review basis', sel('qf-review', 'qf:review', f, REVIEW_BASES)) + field('qf-anniv', 'Review anniversary', inp('qf-anniv', 'qf:anniversary', f)) +
       field('qf-valid', 'Valid for (days)', inp('qf-valid', 'qf:validDays', f, ' inputmode="numeric"')) + '</div>' +
-      (check ? '<div class="card ' + (check.low ? 'warn-card' : 'info-card') + '" style="margin-top:12px">' + esc(check.text) + ' Every quote goes to ' + esc(APPROVER.name) + ' for approval before it can be sent.</div>' : '') + '</section>' +
+      '<div id="q-check">' + (check ? '<div class="card ' + (check.low ? 'warn-card' : 'info-card') + '" style="margin-top:12px">' + esc(check.text) + ' Every quote goes to ' + esc(APPROVER.name) + ' for approval before it can be sent.</div>' : '') + '</div></section>' +
       '<section class="card"><h2 style="margin-bottom:10px">Notes for the customer</h2><label class="sr" for="qf-notes">Notes</label><textarea id="qf-notes" data-qf="notes" rows="3" placeholder="Special conditions, site specifics, anything this customer should know">' + esc(f.notes || '') + '</textarea>' +
       '<p class="tiny" style="margin:8px 0 0">Standard terms are added automatically. ' + (CAN_APPROVE ? '<button class="lnk" data-go="quoteTerms">Edit the standard terms</button>' : 'Editors can change the standard terms.') + '</p></section>' +
       myDetailsCard() +
       (st.crmError ? '<p class="small" style="color:var(--alert-ink);margin:0">' + esc(st.crmError) + '</p>' : '') +
       '<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-olive" data-qact="save-draft">' + (st.qEditId ? 'Save changes' : 'Save draft') + '</button><button class="btn btn-quiet" data-go="' + back + '">Cancel</button></div>' +
-      '</div><div class="q-preview">' + quotePaper(f, { draft: true }) + '</div></div>';
+      '</div><div class="q-preview" id="q-preview">' + quotePaper(f, { draft: true }) + '</div></div>';
+  }
+  function renderQuoteLive() {
+    // keep typing in the quote form uninterrupted: refresh only the derived bits (the live preview and the
+    // price-check banner), never the <input>/<textarea> elements themselves, so focus, cursor position and
+    // native widgets (e.g. the date field's day/month/year segments) are never destroyed mid-keystroke.
+    var f = st.qf; if (!f) return;
+    var qp = document.getElementById('q-preview'); if (qp) qp.innerHTML = quotePaper(f, { draft: true });
+    var qc = document.getElementById('q-check');
+    if (qc) {
+      var check = f.product && num(f.price) ? priceCheck(f) : null;
+      qc.innerHTML = check ? '<div class="card ' + (check.low ? 'warn-card' : 'info-card') + '" style="margin-top:12px">' + esc(check.text) + ' Every quote goes to ' + esc(APPROVER.name) + ' for approval before it can be sent.</div>' : '';
+    }
   }
   function myDetailsCard() {
     var p = st.mp || (st.mp = { title: MYPROFILE.title || '', mobile: MYPROFILE.mobile || '', email: MYPROFILE.email || '' });
@@ -2462,7 +2474,12 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
     if (hadFocusInChat || (st.chatOpen && !st.thinking && st.msgs.length)) { var q = document.getElementById('chatq'); if (q) q.focus(); }
     if (focusId) {
       var fe = document.getElementById(focusId);
-      if (fe && fe !== document.activeElement) { fe.focus(); try { if (caret) fe.setSelectionRange(caret[0], caret[1]); } catch (err) { /* not a text field */ } }
+      if (fe && fe !== document.activeElement) {
+        fe.focus();
+        // email/tel/date/number inputs don't support selectionStart/End, so caret is null for them;
+        // land the cursor at the end (not the browser's default start) instead of reversing each keystroke.
+        try { if (caret) fe.setSelectionRange(caret[0], caret[1]); else if (typeof fe.value === 'string') fe.setSelectionRange(fe.value.length, fe.value.length); } catch (err) { /* not a text field */ }
+      }
     }
   }
 
@@ -2523,7 +2540,13 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       else if (d.lf === 'coldReason') { if (LEADS[st.leadId]) updateLead(st.leadId, { coldReason: v }, v ? 'Cold reason: ' + v : 'Cold reason cleared'); }
       else if (d.lf) (st.lf = st.lf || {})[d.lf] = v;
       else if (d.sf) (st.sf = st.sf || {})[d.sf] = v;
-      else if (d.qf) { (st.qf = st.qf || blankQuote())[d.qf] = v; render(); }
+      else if (d.qf) {
+        (st.qf = st.qf || blankQuote())[d.qf] = v;
+        // only a field that can change the form's own structure (e.g. picking a delivered/ex-mill pricing
+        // basis shows/hides the freight fields) needs the full re-render; everything else just refreshes the
+        // live preview + price-check banner, so the input/textarea being typed into is never destroyed.
+        if (e.target.tagName === 'SELECT') render(); else renderQuoteLive();
+      }
       else if (d.mp) (st.mp = st.mp || {})[d.mp] = v;
       else if (d.qs) (st.qsf = st.qsf || {})[d.qs] = v;
       else if (d.qd) (st.qdf = st.qdf || {})[d.qd] = v;

@@ -79,6 +79,16 @@ Git: https://github.com/Nature-s-Flame/Roland (branch `main`) — this repo is P
   wrapped in a .zip because the download allowlist excludes .eml. Standard terms are a proposed draft pending review.
   Artifact capabilities now: `{db: {rules: [approvals write admin, settings write admin]}, user: {scopes: ["profile"]},
   downloads: {}, sample: {}}` — omit `capabilities` on republish to keep them.
+- Quote form rendering (fixed 15 Oct 2026): typing in the Quote form used to call the global `render()` on every
+  keystroke (needed so the live preview pane updates as you type), which destroys and recreates every `<input>`,
+  including the one being typed into — this silently reversed typed text in `type="email"` fields (no
+  `selectionStart`/`setSelectionRange` support to restore the caret) and dropped already-typed day/month when
+  starting the year in the `type="date"` field (focus resets to the first segment on a freshly-created date
+  input, with no way to restore which segment was active). Fixed at the root: `qf` input/textarea keystrokes now
+  call `renderQuoteLive()` (updates only `#q-preview` and `#q-check`, never the fields) instead of `render()`;
+  only `<select>`-backed `qf` fields (e.g. `qf-pricing`, which shows/hides the freight fields) still call the
+  full `render()`, since selects aren't typed into character-by-character. Don't reintroduce a full `render()`
+  on `qf` input/textarea keystrokes — same destructive-rebuild bug will resurface for whatever field types it.
 - Ask Roland (chat): in the artifact it uses the `sample` capability, so questions run on each VIEWER's own Claude
   account (first use asks them to allow it). Claude gets a rules turn (who's asking, today, headline KPIs, answer
   style) plus seven page tools: find_accounts, get_account (incl. payment position, orders, contracts, quotes),
