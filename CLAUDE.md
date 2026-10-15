@@ -1,7 +1,8 @@
 # Roland · Nature's Flame CRM
 
 Roland is a CRM for Nature's Flame (NZ wood-pellet manufacturer, Taupō) with a customer portal.
-This folder holds the clickable mock-up while the real build is planned. Not yet a git repo.
+This folder holds the clickable mock-up while the real build is planned.
+Git: private repo https://github.com/1daniebrink-netizen/Roland (branch `main`). `data/`, `artifact/` and `*.zip` are ignored.
 
 ## Layout
 
