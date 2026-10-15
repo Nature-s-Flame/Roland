@@ -89,6 +89,19 @@ Git: https://github.com/Nature-s-Flame/Roland (branch `main`) — this repo is P
   only `<select>`-backed `qf` fields (e.g. `qf-pricing`, which shows/hides the freight fields) still call the
   full `render()`, since selects aren't typed into character-by-character. Don't reintroduce a full `render()`
   on `qf` input/textarea keystrokes — same destructive-rebuild bug will resurface for whatever field types it.
+- Quote form Company field (16 Oct 2026): `qf-company` is a text input with `list="qf-company-list"` (native
+  searchable dropdown, like the existing SAP-code `datalist` fields) instead of free text. Options come from
+  `companyDirectory()`: real SAP customers (`ACC` entries with `.real`, i.e. actual Power BI sales data — not
+  the sample/demo `ACC` rows) plus open prospects (`LEADS` not Cold/Lost/Customer; a prospect that has become a
+  Customer is left out since its SAP account entry already covers it). Typing an exact match (or picking from
+  the dropdown) calls `applyCompanyToQuote()`, which overwrites contact name/role/email/phone/address/city from
+  that record — all still plain inputs, so the preparer can type over any of them for a different contact at
+  the same company. `quoteFromLead`/`quoteFromAccount` now call the same helper, so the three entry points
+  (generic "+ Create quote", and the per-prospect/per-account "Create quote" buttons) stay in sync. Saving
+  re-resolves the typed company against `companyDirectory()` and blocks with a "pick an existing customer or
+  prospect, or add it as a new prospect first" error if it doesn't match — this is what forces a brand-new
+  company through "+ New prospect" before it can be quoted, matching the guardrail Danie asked for. The
+  "no match" hint under the field links straight to a pre-filled New Prospect form (`data-qnew-prospect`).
 - Ask Roland (chat): in the artifact it uses the `sample` capability, so questions run on each VIEWER's own Claude
   account (first use asks them to allow it). Claude gets a rules turn (who's asking, today, headline KPIs, answer
   style) plus seven page tools: find_accounts, get_account (incl. payment position, orders, contracts, quotes),

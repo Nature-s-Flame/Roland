@@ -750,6 +750,37 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       .map(function (id) { return { kind: 'lead', id: id, name: LEADS[id].company, note: 'Prospect · ' + leadState(LEADS[id]).label }; });
     return accs.concat(leads);
   }
+  // Quotable companies: real SAP customers (from the Power BI sales data, not the sample/demo accounts)
+  // plus open prospects (New Prospect records) that haven't gone Cold or Lost. A prospect that has become
+  // a Customer (sapCode has invoices) is left out here since its SAP account entry already covers it.
+  function companyDirectory() {
+    var out = [], seen = {};
+    ACC.filter(function (a) { return a.real; }).forEach(function (a) {
+      var k = a.name.trim().toLowerCase();
+      if (k && !seen[k]) { seen[k] = 1; out.push({ name: a.name, kind: 'acc', id: a.id }); }
+    });
+    Object.keys(LEADS).forEach(function (id) {
+      var l = LEADS[id], s = leadState(l), k = (l.company || '').trim().toLowerCase();
+      if (!k || seen[k] || s.key === 'Cold' || s.key === 'Lost' || s.key === 'Customer') return;
+      seen[k] = 1; out.push({ name: l.company, kind: 'lead', id: id });
+    });
+    return out.sort(function (a, b) { return a.name.localeCompare(b.name); });
+  }
+  function companyMatch(name) {
+    var k = (name || '').trim().toLowerCase();
+    if (!k) return null;
+    return companyDirectory().filter(function (o) { return o.name.trim().toLowerCase() === k; })[0] || null;
+  }
+  function companyDatalist() {
+    return '<datalist id="qf-company-list">' + companyDirectory().map(function (o) { return '<option value="' + esc(o.name) + '">'; }).join('') + '</datalist>';
+  }
+  function companyHintInner(f) {
+    var txt = (f.company || '').trim();
+    if (!txt) return 'Search an existing customer or open prospect by name.';
+    var m = companyMatch(txt);
+    if (m) return (m.kind === 'acc' ? 'Existing customer, from SAP sales data.' : 'Open prospect in Roland.') + ' Contact details below were filled in from the record — change them if you’re dealing with someone else there.';
+    return '<span class="dup">No existing customer or open prospect matches “' + esc(txt) + '”. <button type="button" class="lnk" data-qnew-prospect="' + esc(txt) + '">Add it as a new prospect</button> first.</span>';
+  }
   function nextContractNo() {
     var max = 0;
     CONTRACTS.concat(Object.keys(LEADS).map(function (k) { return { no: LEADS[k].signed && LEADS[k].signed.contractNo }; })).forEach(function (c) {
@@ -1246,18 +1277,35 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
   }
 
   function blankQuote() { return { pricing: PRICING[0], review: 'PPI', anniversary: '1 July', validDays: '30', term: '3', profile: 'Even through the year', freightUnit: '$/t' }; }
+  // Fills the Customer card from a companyDirectory() match, overwriting whatever was there before —
+  // picking a different company means starting from that company's own contact details — while leaving
+  // every other field (supply, price, notes) untouched so the rest of an in-progress quote survives.
+  function applyCompanyToQuote(f, m) {
+    f.company = m.name;
+    if (m.kind === 'acc') {
+      var a = ACC.filter(function (x) { return x.id === m.id; })[0], r = (a && a.real) || {};
+      f.acc = m.id; delete f.lead;
+      f.contactName = r.contact || ''; f.contactRole = ''; f.email = ''; f.phone = r.phone || ''; f.address = ''; f.city = r.city || '';
+    } else {
+      var l = LEADS[m.id] || {};
+      f.lead = m.id; delete f.acc;
+      f.contactName = l.contactName || ''; f.contactRole = l.contactRole || ''; f.email = l.email || ''; f.phone = l.mobile || ''; f.address = l.address || ''; f.city = l.city || '';
+    }
+  }
   function quoteFromLead(id) {
     var l = LEADS[id], a = (l.agreements || [])[0] || {};
     var pricing = /customer collects/i.test(a.pricing || '') ? PRICING[2] : /ex-gate/i.test(a.pricing || '') ? PRICING[1] : PRICING[0];
-    return Object.assign(blankQuote(), { lead: id, company: l.company, contactName: l.contactName, contactRole: l.contactRole, email: l.email, phone: l.mobile, address: l.address, city: l.city,
-      product: a.product || '', delivery: a.delivery || '', volume: a.volume ? String(a.volume) : '', price: a.price ? String(a.price) : '', pricing: pricing, term: a.term ? String(a.term) : '3',
+    var f = blankQuote();
+    applyCompanyToQuote(f, { kind: 'lead', id: id, name: l.company });
+    return Object.assign(f, { product: a.product || '', delivery: a.delivery || '', volume: a.volume ? String(a.volume) : '', price: a.price ? String(a.price) : '', pricing: pricing, term: a.term ? String(a.term) : '3',
       start: a.start || '', review: a.review || 'PPI', anniversary: a.anniversary || '1 July', profile: /residential|commercial/i.test(l.seg || '') ? 'Winter heating profile' : 'Even through the year' });
   }
   function quoteFromAccount(id) {
     var a = ACC.filter(function (x) { return x.id === id; })[0];
     if (!a) return blankQuote();
-    var r = a.real || {};
-    return Object.assign(blankQuote(), { acc: id, company: a.name, contactName: r.contact || '', phone: r.phone || '', city: r.city || '' });
+    var f = blankQuote();
+    applyCompanyToQuote(f, { kind: 'acc', id: id, name: a.name });
+    return f;
   }
   function vQuoteEdit() {
     var f = st.qf || (st.qf = blankQuote());
@@ -1270,7 +1318,8 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       (errs.length ? '<div class="card err-card"><strong>Please complete:</strong> ' + esc(errs.join(', ')) + '</div>' : '') +
       '<div class="q-split"><div style="display:flex;flex-direction:column;gap:16px;min-width:0">' +
       '<section class="card"><h2 style="margin-bottom:10px">Customer</h2><div class="form-grid">' +
-      field('qf-company', 'Company', inp('qf-company', 'qf:company', f), true) + field('qf-cname', 'Contact name', inp('qf-cname', 'qf:contactName', f), true) +
+      field('qf-company', 'Company', inp('qf-company', 'qf:company', f, ' list="qf-company-list" autocomplete="off" placeholder="Search by name…"') + companyDatalist(), true,
+        '<span id="q-company-hint">' + companyHintInner(f) + '</span>') + field('qf-cname', 'Contact name', inp('qf-cname', 'qf:contactName', f), true) +
       field('qf-crole', 'Role', inp('qf-crole', 'qf:contactRole', f)) + field('qf-email', 'Email', inp('qf-email', 'qf:email', f, ' type="text" inputmode="email" autocomplete="email"'), false, 'Needed for the email draft') +
       field('qf-phone', 'Phone', inp('qf-phone', 'qf:phone', f, ' type="tel"')) + field('qf-address', 'Delivery address', inp('qf-address', 'qf:address', f)) + field('qf-city', 'Town or city', inp('qf-city', 'qf:city', f)) +
       '</div></section>' +
@@ -1310,6 +1359,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       var check = f.product && num(f.price) ? priceCheck(f) : null;
       qc.innerHTML = check ? '<div class="card ' + (check.low ? 'warn-card' : 'info-card') + '" style="margin-top:12px">' + esc(check.text) + ' Every quote goes to ' + esc(APPROVER.name) + ' for approval before it can be sent.</div>' : '';
     }
+    var ch = document.getElementById('q-company-hint'); if (ch) ch.innerHTML = companyHintInner(f);
   }
   function myDetailsCard() {
     var p = st.mp || (st.mp = { title: MYPROFILE.title || '', mobile: MYPROFILE.mobile || '', email: MYPROFILE.email || '' });
@@ -1322,6 +1372,11 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
   function saveQuoteDraft() {
     var f = st.qf || {}, errs = [];
     if (!(f.company || '').trim()) errs.push('company');
+    else {
+      var cm = companyMatch(f.company);
+      if (!cm) errs.push('company — pick an existing customer or prospect from the list, or add it as a new prospect first');
+      else { f.company = cm.name; if (cm.kind === 'acc') { f.acc = cm.id; delete f.lead; } else { f.lead = cm.id; delete f.acc; } }
+    }
     if (!(f.contactName || '').trim()) errs.push('contact name');
     if (!f.product) errs.push('product');
     if (!(num(f.volume) > 0)) errs.push('annual volume');
@@ -2485,7 +2540,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
 
   // ---------- Events ----------
   document.addEventListener('click', function (e) {
-    var el = e.target.closest('[data-go],[data-plan],[data-deal],[data-acc],[data-draft],[data-chat],[data-sugg],[data-seg],[data-con],[data-ctype],[data-rv-open],[data-rv-save],[data-rv-cancel],[data-lead],[data-lstage],[data-lact],[data-pfilter],[data-quote],[data-qact],[data-qfilter],[data-qnew-lead],[data-qnew-acc]');
+    var el = e.target.closest('[data-go],[data-plan],[data-deal],[data-acc],[data-draft],[data-chat],[data-sugg],[data-seg],[data-con],[data-ctype],[data-rv-open],[data-rv-save],[data-rv-cancel],[data-lead],[data-lstage],[data-lact],[data-pfilter],[data-quote],[data-qact],[data-qfilter],[data-qnew-lead],[data-qnew-acc],[data-qnew-prospect]');
     if (!el) return;
     var ds = el.dataset;
     if (ds.lead) { set({ view: 'prospect', leadId: ds.lead, lPanel: null, crmError: '', copyMsg: '', copyFallback: false, af: null, sf: null }); window.scrollTo(0, 0); return; }
@@ -2497,6 +2552,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
     if (ds.qfilter) { set({ qFilter: ds.qfilter }); return; }
     if (ds.qnewLead) { st.qf = quoteFromLead(ds.qnewLead); st.qEditId = null; st.qfErrors = []; set({ view: 'quoteEdit', crmError: '' }); window.scrollTo(0, 0); return; }
     if (ds.qnewAcc) { st.qf = quoteFromAccount(ds.qnewAcc); st.qEditId = null; st.qfErrors = []; set({ view: 'quoteEdit', crmError: '' }); window.scrollTo(0, 0); return; }
+    if (ds.qnewProspect !== undefined) { st.pf = Object.assign(blankProspect(), { company: ds.qnewProspect }); st.pfEditId = null; st.pfErrors = []; set({ view: 'prospectNew', crmError: '' }); window.scrollTo(0, 0); return; }
     if (ds.go === 'quoteTerms') { st.qt = null; st.qMsg = ''; }
     if (ds.go === 'quote' && !QUOTES[st.quoteId]) ds = { go: 'quotes' };
     if (ds.go === 'prospectNew' && st.view !== 'prospectNew') { st.pf = blankProspect(); st.pfEditId = null; st.pfErrors = []; st.crmError = ''; }
@@ -2541,11 +2597,21 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       else if (d.lf) (st.lf = st.lf || {})[d.lf] = v;
       else if (d.sf) (st.sf = st.sf || {})[d.sf] = v;
       else if (d.qf) {
-        (st.qf = st.qf || blankQuote())[d.qf] = v;
+        var qf = st.qf = st.qf || blankQuote();
+        qf[d.qf] = v;
+        if (d.qf === 'company') {
+          // an exact match (typed in full, or picked from the datalist) populates the contact fields
+          // below from that record — like picking a pricing basis, that changes other fields' own
+          // values, so it needs the full render(); every other keystroke here (still searching, no
+          // match yet) only refreshes the live bits, so the company field itself is never rebuilt
+          // mid-keystroke.
+          var cm = companyMatch(v);
+          if (cm) { applyCompanyToQuote(qf, cm); render(); } else { delete qf.acc; delete qf.lead; renderQuoteLive(); }
+        }
         // only a field that can change the form's own structure (e.g. picking a delivered/ex-mill pricing
         // basis shows/hides the freight fields) needs the full re-render; everything else just refreshes the
         // live preview + price-check banner, so the input/textarea being typed into is never destroyed.
-        if (e.target.tagName === 'SELECT') render(); else renderQuoteLive();
+        else if (e.target.tagName === 'SELECT') render(); else renderQuoteLive();
       }
       else if (d.mp) (st.mp = st.mp || {})[d.mp] = v;
       else if (d.qs) (st.qsf = st.qsf || {})[d.qs] = v;
