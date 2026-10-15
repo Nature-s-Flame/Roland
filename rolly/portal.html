@@ -206,7 +206,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
     if (!s || !s.accounts || !s.portal) return;
     DATA = { meta: s.meta, asOf: s.portal.asOf, accounts: s.accounts.slice().sort(function (a, b) { return a.name.localeCompare(b.name); }), portal: s.portal.customers };
     var saved = null;
-    try { saved = localStorage.getItem('roland.portal.customer'); } catch (e) { /* no storage */ }
+    try { saved = localStorage.getItem('rolly.portal.customer') || localStorage.getItem('roland.portal.customer'); } catch (e) { /* no storage */ }
     var byId = {};
     DATA.accounts.forEach(function (a) { byId[a.id] = a; });
     DATA.byId = byId;
@@ -295,14 +295,14 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
     var tab = REAL_VIEWS[st.tab] ? st.tab : 'orders';
     document.getElementById('app').innerHTML = signInBar() +
       '<header class="top"><a class="logo" href="#" aria-label="Nature’s Flame">' + MARK + '<span class="w">Nature’s<br>Flame</span></a><span class="divider"></span><span class="area">Customer portal</span>' +
-      '<div class="top-r"><span class="small muted">' + esc(a.name) + '</span><div class="avatar" aria-label="Signed in as ' + esc(a.name) + '">' + esc(a.name.replace(/[^A-Za-z ]/g, '').split(/\s+/).filter(Boolean).map(function (w) { return w.charAt(0); }).join('').slice(0, 2).toUpperCase()) + '</div><a class="back-crm" href="index.html">← Back to Roland CRM</a></div></header>' +
+      '<div class="top-r"><span class="small muted">' + esc(a.name) + '</span><div class="avatar" aria-label="Signed in as ' + esc(a.name) + '">' + esc(a.name.replace(/[^A-Za-z ]/g, '').split(/\s+/).filter(Boolean).map(function (w) { return w.charAt(0); }).join('').slice(0, 2).toUpperCase()) + '</div><a class="back-crm" href="index.html">← Back to Rolly CRM</a></div></header>' +
       '<div class="notice">Real customer data from SAP via Power BI, to ' + esc(fmtDate(DATA.asOf)) + '. A real customer would see only their own account. Contains customer data: share only within Nature’s Flame.</div>' +
       '<section class="hero">' + SWOOSH + '<div class="hero-in"><div><div class="eyebrow" style="color:var(--nf-green)">Fuelling your future</div><h1>Kia ora, ' + esc(a.name) + '</h1><p>Customer no. ' + esc(a.id) + ' · ' + esc(a.seg) + (a.city ? ' · ' + esc(a.city) : '') + ' · updated ' + esc(fmtDate(DATA.asOf)) + '</p></div>' +
       '<button class="btn btn-light" data-act="msg">Message your account manager</button></div></section>' +
       '<main>' +
       (st.msg ? '<div class="card" style="display:flex;flex-direction:column;gap:10px;border-left:4px solid var(--nf-green)"><div style="font-weight:700">To ' + esc(rep) + '</div>' +
         '<label class="small muted" for="msg-body">Your message</label><textarea id="msg-body" rows="3" placeholder="e.g. Can you send a statement for September?"></textarea>' +
-        '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn btn-solid" data-act="msg">Close</button><span class="small muted">In the real portal this emails your account manager and logs the message on your account in Roland.</span></div></div>' : '') +
+        '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn btn-solid" data-act="msg">Close</button><span class="small muted">In the real portal this emails your account manager and logs the message on your account in Rolly.</span></div></div>' : '') +
       '<div class="tiles">' + tiles.map(function (k) { return '<div class="kpi"><div class="l">' + esc(k[0]) + '</div><div class="v">' + esc(k[1]) + '</div><div class="n">' + esc(k[2]) + '</div></div>'; }).join('') + '</div>' +
       '<nav class="tabs" aria-label="Portal sections">' + REAL_TABS.map(function (t) { return '<button class="tab' + (tab === t[0] ? ' on' : '') + '" data-tab="' + t[0] + '"' + (tab === t[0] ? ' aria-current="page"' : '') + '>' + t[1] + '</button>'; }).join('') + '</nav>' +
       '<div style="display:flex;flex-direction:column;gap:22px">' + REAL_VIEWS[tab]() + '</div>' +
@@ -356,7 +356,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
     ];
     document.getElementById('app').innerHTML =
       '<header class="top"><a class="logo" href="#" aria-label="Nature’s Flame">' + MARK + '<span class="w">Nature’s<br>Flame</span></a><span class="divider"></span><span class="area">Customer portal</span>' +
-      '<div class="top-r"><span class="small muted">Southern Hearth Merchants</span><div class="avatar" aria-label="Signed in as Grace Moana">GM</div><a class="back-crm" href="index.html">← Back to Roland CRM mock</a></div></header>' +
+      '<div class="top-r"><span class="small muted">Southern Hearth Merchants</span><div class="avatar" aria-label="Signed in as Grace Moana">GM</div><a class="back-crm" href="index.html">← Back to Rolly CRM mock</a></div></header>' +
       '<div class="notice">Mock-up for discussion. Fictitious customer, orders and amounts. A customer sees only their own account.</div>' +
       '<section class="hero">' + SWOOSH + '<div class="hero-in"><div><div class="eyebrow" style="color:var(--nf-green)">Fuelling your future</div><h1>Kia ora, Grace</h1><p>Southern Hearth Merchants · customer no. 100482 · updated 06:00 today</p></div>' +
       '<button class="btn btn-light" data-act="msg">Message your account manager</button></div></section>' +
@@ -380,13 +380,13 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
   });
   document.addEventListener('change', function (e) {
     if (e.target.id !== 'cust-select') return;
-    try { localStorage.setItem('roland.portal.customer', e.target.value); } catch (err) { /* no storage */ }
+    try { localStorage.setItem('rolly.portal.customer', e.target.value); } catch (err) { /* no storage */ }
     set({ cust: e.target.value, msg: false });
     var sel = document.getElementById('cust-select'); if (sel) sel.focus();
   });
 
   render();
-  if (window.ROLAND_PORTAL) loadData(window.ROLAND_PORTAL);
+  if (window.ROLLY_PORTAL) loadData(window.ROLLY_PORTAL);
   else {
     fetch('../data/snapshot.json', { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })

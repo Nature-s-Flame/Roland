@@ -1,4 +1,4 @@
-"""Build publishable artifact files from roland/.
+"""Build publishable artifact files from rolly/.
 
 Artifacts can't load fonts from relative files, so every
 url(fonts/*.ttf) is inlined as a data URI. The main page is published without its
@@ -11,7 +11,7 @@ and keeps its full document.
 import base64, json, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SRC = ROOT / "roland"
+SRC = ROOT / "rolly"
 OUT = ROOT / "artifact"
 
 FONT_URL = re.compile(r'url\(fonts/([\w\-]+\.ttf)\) format\("truetype"\)')
@@ -36,14 +36,14 @@ def main() -> None:
     OUT.mkdir(exist_ok=True)
 
     page = (SRC / "index.html").read_text(encoding="utf-8")
-    page = page.replace("<title>Roland · Nature's Flame CRM</title>", "<title>Roland CRM Mock</title>")
+    page = page.replace("<title>Rolly · Nature's Flame CRM</title>", "<title>Rolly CRM Mock</title>")
     page = strip_document(inline_fonts(page))
     if "--with-data" in sys.argv:
         snap = json.loads((ROOT / "data" / "snapshot.json").read_text(encoding="utf-8"))
         payload = json.dumps(snap, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-        page = page.replace("<script>", f"<script>window.ROLAND_SNAPSHOT={payload};</script>\n<script>", 1)
+        page = page.replace("<script>", f"<script>window.ROLLY_SNAPSHOT={payload};</script>\n<script>", 1)
         print(f"embedded snapshot: {len(snap['accounts'])} accounts, data to {snap['meta']['asOf']}")
-    (OUT / "roland.html").write_text(page, encoding="utf-8")
+    (OUT / "rolly.html").write_text(page, encoding="utf-8")
 
     portal = (SRC / "portal.html").read_text(encoding="utf-8")
     portal = portal.replace('content="width=device-width,initial-scale=1"', 'content="width=device-width,initial-scale=1,viewport-fit=cover"')
@@ -54,7 +54,7 @@ def main() -> None:
         sub = {"meta": snap["meta"], "portal": snap.get("portal"),
                "accounts": [{k: a[k] for k in keep} for a in snap["accounts"]]}
         payload = json.dumps(sub, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-        portal = portal.replace("<script>", f"<script>window.ROLAND_PORTAL={payload};</script>\n<script>", 1)
+        portal = portal.replace("<script>", f"<script>window.ROLLY_PORTAL={payload};</script>\n<script>", 1)
         print(f"embedded portal data: {len(sub['accounts'])} customers")
     (OUT / "portal.html").write_text(portal, encoding="utf-8")
 

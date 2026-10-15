@@ -1,4 +1,4 @@
-# Roland ↔ Power BI "Sales Analysis" — what's there, what's missing
+# Rolly ↔ Power BI "Sales Analysis" — what's there, what's missing
 
 Source: `Downloads\Sales Analysis.pbip` (Import model; SAP Business One tables via a Power BI dataflow,
 plus a SharePoint Excel sales plan). Read on 15 Oct 2026 from the live model in Power BI Desktop.
@@ -22,9 +22,9 @@ Report pages: Pellet Sales Analysis, Pellet Sales Trends, Biomass Sales Analysis
 Last 12 months by segment (tonnes · NZ$ excl. GST): Commercial/Industrial 106,492 t · $30.1m; Export 78,528 t · $24.0m;
 Wholesale/Retail 8,924 t · $5.6m; Biomass $1.2m; Residential $42k.
 
-## Roland screen by screen
+## Rolly screen by screen
 
-| Roland screen / field | Status | Source in model | Notes |
+| Rolly screen / field | Status | Source in model | Notes |
 |---|---|---|---|
 | Accounts list: name, segment, region, owner | ✅ Have | OCRD CardName, GroupName, Island/City/U_Territory, SlpName | Filter CardType = "C"; exclude "Customers DO NOT USE" |
 | Accounts: status (Customer / Prospect / Lead / Lost) | ⚠️ Partial | Derive "Customer" from invoices in last 12 months | Prospects, leads and lost are CRM data, not SAP |
@@ -41,10 +41,10 @@ Wholesale/Retail 8,924 t · $5.6m; Biomass $1.2m; Residential $42k.
 | Stock: weeks of cover | ⚠️ Derive | OnHand ÷ avg weekly sales from INV1 | |
 | Current orders table | ❌ Missing | — | Needs ORDR/RDR1 |
 | Price list | ⚠️ Partial | Realised prices (AveSalesPrice by item) | List prices need SAP price lists **ITM1/OPLN** |
-| Dashboard: won this quarter, stalled deals | ❌ Not SAP | — | Pipeline data lives in Roland itself |
+| Dashboard: won this quarter, stalled deals | ❌ Not SAP | — | Pipeline data lives in Rolly itself |
 | Supply agreements (Stage 2) | ✅ Have (plan) | SALES PLAN: Client, Contract Start/End, monthly Volume, Price | Join to invoices by customer for planned vs delivered |
 | Forecast (Stage 2) | ✅ Have | SALES PLAN Revenue + plant capacity | |
-| Pipeline, deals, activities, comms | ❌ Not SAP | — | Roland's own data (and Outlook/Teams via Graph) |
+| Pipeline, deals, activities, comms | ❌ Not SAP | — | Rolly's own data (and Outlook/Teams via Graph) |
 | Customer portal: invoices | ✅ Have | OINV DocNum, DocDate, DocDueDate, total, PaidSys | Status = paid if PaidSys ≥ total |
 | Customer portal: orders, deliveries, quotes | ❌ Missing | — | Need ORDR, ODLN, OQUT |
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Roland · Nature's Flame CRM</title>
+<title>Rolly · Nature's Flame CRM</title>
 <style>
 @font-face{font-family:"Open Sans";src:url(fonts/OpenSans-Regular.ttf) format("truetype");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"Open Sans";src:url(fonts/OpenSans-Italic.ttf) format("truetype");font-weight:400;font-style:italic;font-display:swap}
@@ -433,11 +433,11 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
     { name: 'Industrial grade pellets', format: 'Bulk, tipper delivery', grade: 'Industrial', unit: 'per tonne delivered', price: 'NZ$430' }
   ];
   var ANSWERS = [
-    { re: /attention|stalled|this week|at risk|call today|who should/, text: 'One deal needs you now: Winter 2027 bagged range (Southern Hearth Merchants, NZ$312k) has sat at Proposal sent for 12 days, past the 10-day limit.\n\nGood news: Grace Moana replied on 7 Oct asking to hold pricing to 30 November, and a reply draft is ready in Customer comms.\n\nAlso this week: send the FSC pack to Kowhai Valley today, and the silo-access site visit there on 21 Oct.', src: 'Sources: Roland pipeline and activities · Outlook' },
-    { re: /southern|hearth|grace/, text: 'Southern Hearth Merchants · merchant / retail, 34 South Island stores · Rep B\n\nLast 12 months: 2,410 t, NZ$1.18m. Run rate 201 t/month, peaking May to July.\nOpen orders: 3 (640 t). Next delivery SO-48211, 220 t on 14 Oct.\nOpen deal: Winter 2027 bagged range, 600 t, NZ$312k, at Proposal sent.\nLatest: Grace asked on 7 Oct to hold pricing until 30 November.', src: 'Sources: Roland · SAP via Power BI (06:00 today) · Outlook' },
+    { re: /attention|stalled|this week|at risk|call today|who should/, text: 'One deal needs you now: Winter 2027 bagged range (Southern Hearth Merchants, NZ$312k) has sat at Proposal sent for 12 days, past the 10-day limit.\n\nGood news: Grace Moana replied on 7 Oct asking to hold pricing to 30 November, and a reply draft is ready in Customer comms.\n\nAlso this week: send the FSC pack to Kowhai Valley today, and the silo-access site visit there on 21 Oct.', src: 'Sources: Rolly pipeline and activities · Outlook' },
+    { re: /southern|hearth|grace/, text: 'Southern Hearth Merchants · merchant / retail, 34 South Island stores · Rep B\n\nLast 12 months: 2,410 t, NZ$1.18m. Run rate 201 t/month, peaking May to July.\nOpen orders: 3 (640 t). Next delivery SO-48211, 220 t on 14 Oct.\nOpen deal: Winter 2027 bagged range, 600 t, NZ$312k, at Proposal sent.\nLatest: Grace asked on 7 Oct to hold pricing until 30 November.', src: 'Sources: Rolly · SAP via Power BI (06:00 today) · Outlook' },
     { re: /stock|bag|promise|available|availability/, text: '15 kg bags: 300 t available to promise. That is 540 t on hand less 240 t already on open orders, about 2.4 weeks of cover.\n\nWorth checking with production before confirming Southern Hearth’s winter bag volumes.', src: 'Sources: SAP via Power BI · data as of 06:00 today' },
-    { re: /ruru|follow|draft|reply|email/, text: 'Here’s a draft for Aroha Whitu at Ruru Bay School:\n\n“Kia ora Aroha, thanks for confirming the renewal. We’re happy to add an annual price review each March, and I’ll send the updated agreement this week. Ngā mihi, Rep B”\n\nSaved to your Outlook Drafts. Nothing is sent until you send it.', src: 'Sources: Roland deal notes · Outlook thread of 6 Oct' },
-    { re: /kowhai|dairy|boiler|mere/, text: 'Kowhai Valley Dairy Co. · industrial heat, Canterbury · Kirsten\n\nOpen deal: boiler conversion supply, 4,800 t/yr over 3 years, about NZ$2.06m a year, at Technical review (40%).\nNext step: silo-access site visit on 21 Oct.\nFrom the 8 Oct Teams call: two boilers; FSC chain-of-custody certificate needed for the tender.', src: 'Sources: Roland · Teams transcript summary · Outlook' }
+    { re: /ruru|follow|draft|reply|email/, text: 'Here’s a draft for Aroha Whitu at Ruru Bay School:\n\n“Kia ora Aroha, thanks for confirming the renewal. We’re happy to add an annual price review each March, and I’ll send the updated agreement this week. Ngā mihi, Rep B”\n\nSaved to your Outlook Drafts. Nothing is sent until you send it.', src: 'Sources: Rolly deal notes · Outlook thread of 6 Oct' },
+    { re: /kowhai|dairy|boiler|mere/, text: 'Kowhai Valley Dairy Co. · industrial heat, Canterbury · Kirsten\n\nOpen deal: boiler conversion supply, 4,800 t/yr over 3 years, about NZ$2.06m a year, at Technical review (40%).\nNext step: silo-access site visit on 21 Oct.\nFrom the 8 Oct Teams call: two boilers; FSC chain-of-custody certificate needed for the tender.', src: 'Sources: Rolly · Teams transcript summary · Outlook' }
   ];
   var SUGG = ['Who should I call today?', 'Brief me on Southern Hearth Merchants', 'How much 15 kg bag stock can we promise?', 'Draft a follow-up to Ruru Bay School'];
 
@@ -642,10 +642,12 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
 
   function initCrm() {
     if (CRM) return;
-    var load = function (k) { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch (e) { return {}; } };
-    LEADS = load('roland.leads'); ACTIVITIES = load('roland.activities');
+    // reads the old roland.* key if the renamed rolly.* key hasn't been written yet, so nobody's
+    // already-saved local prospects/activities go missing after the Roland → Rolly rename.
+    var load = function (k, legacy) { try { var v = localStorage.getItem(k); if (v == null && legacy) v = localStorage.getItem(legacy); return JSON.parse(v || '{}') || {}; } catch (e) { return {}; } };
+    LEADS = load('rolly.leads', 'roland.leads'); ACTIVITIES = load('rolly.activities', 'roland.activities');
     var persist = function () {
-      try { localStorage.setItem('roland.leads', JSON.stringify(LEADS)); localStorage.setItem('roland.activities', JSON.stringify(ACTIVITIES)); return Promise.resolve(); }
+      try { localStorage.setItem('rolly.leads', JSON.stringify(LEADS)); localStorage.setItem('rolly.activities', JSON.stringify(ACTIVITIES)); return Promise.resolve(); }
       catch (e) { return Promise.reject(e); }
     };
     CRM = { mode: 'local',
@@ -778,7 +780,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
     var txt = (f.company || '').trim();
     if (!txt) return 'Search an existing customer or open prospect by name.';
     var m = companyMatch(txt);
-    if (m) return (m.kind === 'acc' ? 'Existing customer, from SAP sales data.' : 'Open prospect in Roland.') + ' Contact details below were filled in from the record — change them if you’re dealing with someone else there.';
+    if (m) return (m.kind === 'acc' ? 'Existing customer, from SAP sales data.' : 'Open prospect in Rolly.') + ' Contact details below were filled in from the record — change them if you’re dealing with someone else there.';
     return '<span class="dup">No existing customer or open prospect matches “' + esc(txt) + '”. <button type="button" class="lnk" data-qnew-prospect="' + esc(txt) + '">Add it as a new prospect</button> first.</span>';
   }
   function nextContractNo() {
@@ -851,7 +853,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       (errs.length ? '<div class="card err-card"><strong>Please complete:</strong> ' + esc(errs.join(', ')) + '</div>' : '') +
       '<section class="card"><h2 style="margin-bottom:10px">Company and site</h2><div class="form-grid">' +
       field('pf-company', 'Company name', inp('pf-company', 'pf:company', f, ' autocomplete="off" placeholder="e.g. Whakatane Growers"'), true,
-        dups.length ? '<span class="dup">Already in Roland: ' + dups.map(function (m) { return '<button class="lnk" data-' + (m.kind === 'acc' ? 'acc' : 'lead') + '="' + esc(m.id) + '">' + esc(m.name) + '</button> (' + esc(m.note) + ')'; }).join(', ') + '</span>' : '') +
+        dups.length ? '<span class="dup">Already in Rolly: ' + dups.map(function (m) { return '<button class="lnk" data-' + (m.kind === 'acc' ? 'acc' : 'lead') + '="' + esc(m.id) + '">' + esc(m.name) + '</button> (' + esc(m.note) + ')'; }).join(', ') + '</span>' : '') +
       field('pf-seg', 'Segment', sel('pf-seg', 'pf:seg', f, SEGMENTS, 'Choose…')) +
       field('pf-source', 'Source', sel('pf-source', 'pf:source', f, SOURCES, 'Choose…')) +
       field('pf-address', 'Site address', inp('pf-address', 'pf:address', f, ' placeholder="Street, suburb"')) +
@@ -1123,19 +1125,21 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
     { t: 'Confidentiality', x: 'The pricing in this quotation is confidential to {{company}} and Nature’s Flame.' }
   ];
 
-  function qLocal(k, d) { try { return JSON.parse(localStorage.getItem(k) || 'null') || d; } catch (e) { return d; } }
+  // reads the old roland.* key if the renamed rolly.* key hasn't been written yet, so nobody's
+  // already-saved local quotes/approvals/profile go missing after the Roland → Rolly rename.
+  function qLocal(k, d, legacy) { try { var v = localStorage.getItem(k); if (v == null && legacy) v = localStorage.getItem(legacy); return JSON.parse(v || 'null') || d; } catch (e) { return d; } }
   function qPut(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return Promise.resolve(); } catch (e) { return Promise.reject(e); } }
   function initQuotes() {
     if (QS) return;
-    QUOTES = qLocal('roland.quotes', {}); APPROVALS = qLocal('roland.approvals', {}); QTERMS = qLocal('roland.quoteTerms', null); MYPROFILE = qLocal('roland.myprofile', {});
+    QUOTES = qLocal('rolly.quotes', {}, 'roland.quotes'); APPROVALS = qLocal('rolly.approvals', {}, 'roland.approvals'); QTERMS = qLocal('rolly.quoteTerms', null, 'roland.quoteTerms'); MYPROFILE = qLocal('rolly.myprofile', {}, 'roland.myprofile');
     CAN_APPROVE = true;
     QS = { mode: 'local',
-      saveQuote: function (id, d) { QUOTES[id] = d; return qPut('roland.quotes', QUOTES); },
-      deleteQuote: function (id) { delete QUOTES[id]; return qPut('roland.quotes', QUOTES); },
-      saveApproval: function (id, d) { APPROVALS[id] = d; return qPut('roland.approvals', APPROVALS); },
-      saveTerms: function (d) { QTERMS = d; return qPut('roland.quoteTerms', d); },
-      saveProfile: function (d) { MYPROFILE = d; return qPut('roland.myprofile', d); },
-      nextNumber: function (year) { var c = qLocal('roland.quoteCounter', {}); c[year] = (c[year] || 0) + 1; return qPut('roland.quoteCounter', c).then(function () { return c[year]; }); } };
+      saveQuote: function (id, d) { QUOTES[id] = d; return qPut('rolly.quotes', QUOTES); },
+      deleteQuote: function (id) { delete QUOTES[id]; return qPut('rolly.quotes', QUOTES); },
+      saveApproval: function (id, d) { APPROVALS[id] = d; return qPut('rolly.approvals', APPROVALS); },
+      saveTerms: function (d) { QTERMS = d; return qPut('rolly.quoteTerms', d); },
+      saveProfile: function (d) { MYPROFILE = d; return qPut('rolly.myprofile', d); },
+      nextNumber: function (year) { var c = qLocal('rolly.quoteCounter', {}, 'roland.quoteCounter'); c[year] = (c[year] || 0) + 1; return qPut('rolly.quoteCounter', c).then(function () { return c[year]; }); } };
     if (!window.claude || typeof window.claude.use !== 'function') return;
     Promise.all([window.claude.use('db'), window.claude.use('user')]).then(function (r) {
       var db = r[0], user = r[1];
@@ -1880,10 +1884,11 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
 
   function initReviewStore() {
     if (REVIEW_STORE) return;
-    try { REVIEWS = JSON.parse(localStorage.getItem('roland.reviews') || '{}') || {}; } catch (e) { REVIEWS = {}; }
+    // falls back to the old roland.reviews key so already-saved reviews survive the rename.
+    try { REVIEWS = JSON.parse(localStorage.getItem('rolly.reviews') || localStorage.getItem('roland.reviews') || '{}') || {}; } catch (e) { REVIEWS = {}; }
     REVIEW_STORE = { mode: 'local', save: function (id, doc) {
       REVIEWS[id] = doc;
-      try { localStorage.setItem('roland.reviews', JSON.stringify(REVIEWS)); } catch (e) { return Promise.reject(e); }
+      try { localStorage.setItem('rolly.reviews', JSON.stringify(REVIEWS)); } catch (e) { return Promise.reject(e); }
       return Promise.resolve();
     } };
     if (!window.claude || typeof window.claude.use !== 'function') return;
@@ -2304,9 +2309,9 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
   function answerFor(q) {
     var t = q.toLowerCase();
     for (var i = 0; i < ANSWERS.length; i++) { if (ANSWERS[i].re.test(t)) return ANSWERS[i]; }
-    return { text: 'Good question. In the full build I’d answer this from Roland’s records, SAP data via Power BI, and your Outlook and Teams.\n\nIn this mock I can answer the suggested questions, or questions about Southern Hearth, Kowhai Valley, stock or stalled deals.', src: '' };
+    return { text: 'Good question. In the full build I’d answer this from Rolly’s records, SAP data via Power BI, and your Outlook and Teams.\n\nIn this mock I can answer the suggested questions, or questions about Southern Hearth, Kowhai Valley, stock or stalled deals.', src: '' };
   }
-  // Live Roland: in the artifact, questions go to Claude on the VIEWER's own Claude account
+  // Live Rolly: in the artifact, questions go to Claude on the VIEWER's own Claude account
   // (the `sample` capability). Claude reads the page's data through a few lookup tools that run
   // here in the page. Without it (local preview, or the viewer declines) the scripted answers remain.
   var AI = null;            // the sample function, once available
@@ -2388,7 +2393,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
           var list = f === 'all' ? CONTRACTS : CONTRACTS.filter(function (c) { return normName(c.company).indexOf(normName(f)) >= 0 || (c.no || '').toLowerCase() === f.toLowerCase(); });
           return list.slice(0, 30).map(contractInfo);
         } },
-      { name: 'get_pipeline', description: 'Sales pipeline: prospects entered in Roland (status, stage, product, volume, value, owner, going-cold date, next step) and the sales-plan agreements by stage, plus prospects that are cold or lost.',
+      { name: 'get_pipeline', description: 'Sales pipeline: prospects entered in Rolly (status, stage, product, volume, value, owner, going-cold date, next step) and the sales-plan agreements by stage, plus prospects that are cold or lost.',
         execute: function () {
           setAiStatus('Reading the pipeline…');
           return { prospects: Object.keys(LEADS).map(function (id) {
@@ -2398,7 +2403,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
             }),
             salesPlan: DEALS.map(function (d) { return { client: d.accLabel || d.name, stage: d.stage, tonnesNext12m: d.t, valueNext12m: d.v, contractEnds: d.end || null }; }) };
         } },
-      { name: 'get_quotes', description: 'Supply quotes in Roland with status (Draft, Awaiting approval, Sent back, Approved, Accepted, Declined, Expired), customer, product, price per tonne, volume, validity and who prepared them.',
+      { name: 'get_quotes', description: 'Supply quotes in Rolly with status (Draft, Awaiting approval, Sent back, Approved, Accepted, Declined, Expired), customer, product, price per tonne, volume, validity and who prepared them.',
         inputSchema: { type: 'object', properties: { status: { type: 'string' } } },
         execute: function (i) {
           setAiStatus('Reading quotes…');
@@ -2417,25 +2422,25 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
   }
   function aiRules() {
     var k = REAL.kpis.map(function (x) { return x.label + ': ' + x.value + ' (' + x.note + ')'; }).join('; ');
-    return 'You are Roland, the sales assistant inside Nature’s Flame’s CRM. Nature’s Flame makes wood pellets in Taupō, New Zealand, and sells them mostly on multi-year supply agreements to industrial, commercial, retail and export customers.\n\n' +
+    return 'You are Rolly, the sales assistant inside Nature’s Flame’s CRM. Nature’s Flame makes wood pellets in Taupō, New Zealand, and sells them mostly on multi-year supply agreements to industrial, commercial, retail and export customers.\n\n' +
       'You are talking with ' + (VIEWER.name || 'a member of the sales team') + '. Today is ' + longDate(iso(TODAY)) + '. SAP sales data runs to ' + longDate(REAL.meta.asOf) + (REAL.portal ? ' and receivables to ' + longDate(REAL.portal.asOf) : '') + '.\n' +
-      'Headline figures: ' + k + '. Contract alerts: ' + contractAlerts().length + '. Prospects in Roland: ' + Object.keys(LEADS).length + '. Quotes: ' + Object.keys(QUOTES).length + '.\n\n' +
+      'Headline figures: ' + k + '. Contract alerts: ' + contractAlerts().length + '. Prospects in Rolly: ' + Object.keys(LEADS).length + '. Quotes: ' + Object.keys(QUOTES).length + '.\n\n' +
       'How to answer:\n- Use the tools to look things up; never invent customers, figures or dates. If the data does not hold the answer, say so plainly and say what would be needed (for example open sales orders are not connected yet; emails and Teams are not connected yet).\n' +
       '- Money is NZD excluding GST unless it is a receivable balance (those include GST). Use en-NZ formatting, e.g. NZ$1.2m, 3,500 t.\n' +
       '- Be brief and practical: lead with the answer, then up to 5 short lines or "- " bullets. No tables, no headings, no markdown other than "- " bullets and **bold** for names.\n' +
-      '- You can suggest actions and draft short emails, but you cannot send anything or change records; the salesperson does that in Roland or Outlook.\n' +
+      '- You can suggest actions and draft short emails, but you cannot send anything or change records; the salesperson does that in Rolly or Outlook.\n' +
       '- End with one line starting "Sources:" naming what you used (e.g. "Sources: SAP via Power BI · Key Contracts Register").';
   }
   function setAiStatus(t) { st.aiStatus = t; var el = document.getElementById('ai-status'); if (el) el.textContent = t; }
   function aiError(code) {
     return { rate_limited: 'You have hit a Claude usage limit for now. Try again in a little while.', session_expired: 'Your Claude session has expired. Sign in again and reload.',
       refused: 'Claude would not answer that one. Try rephrasing the question.', empty_completion: 'No answer came back. Try asking more simply.', prompt_too_large: 'That conversation is too long. Start a new chat.',
-      tools_unavailable: 'This view cannot look up Roland’s data. Open the page in claude.ai.', upstream_error: 'The answer was interrupted. Try again.' }[code] || 'Something went wrong. Try again.';
+      tools_unavailable: 'This view cannot look up Rolly’s data. Open the page in claude.ai.', upstream_error: 'The answer was interrupted. Try again.' }[code] || 'Something went wrong. Try again.';
   }
   function askAI(q) {
     var turns = st.msgs.filter(function (m) { return !m.error && m.text; }).slice(-10).map(function (m) { return { role: m.role === 'user' ? 'user' : 'assistant', content: m.text }; });
     turns.push({ role: 'user', content: q });
-    var live = { role: 'roland', text: '', live: true };
+    var live = { role: 'rolly', text: '', live: true };
     st.msgs = st.msgs.concat([{ role: 'user', text: q }, live]);
     AI_CTL = new AbortController();
     set({ chatOpen: true, thinking: true, aiStatus: 'Thinking…' });
@@ -2453,7 +2458,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       live.live = false;
       if (e && e.code === 'cancelled') { live.text = (e.text || '') + (e.text ? '\n\n(stopped)' : 'Stopped.'); }
       else if (e && (e.code === 'not_granted' || e.code === 'sampling_disabled' || e.code === 'not_declared' || e.code === 'capability_disabled' || e.code === 'capability_removed')) {
-        st.aiOff = true; live.error = true; live.text = 'Claude is not available to Roland for your account, so I’ll use the built-in sample answers instead.';
+        st.aiOff = true; live.error = true; live.text = 'Claude is not available to Rolly for your account, so I’ll use the built-in sample answers instead.';
       } else { live.text = (e && e.text ? e.text + '\n\n' : '') + aiError(e && e.code); live.error = !e || !e.text; }
       set({ thinking: false, aiStatus: '' });
     });
@@ -2468,33 +2473,33 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
     set({ chatOpen: true, thinking: true, msgs: st.msgs.concat([{ role: 'user', text: q }]) });
     setTimeout(function () {
       var a = answerFor(q);
-      set({ thinking: false, msgs: st.msgs.concat([{ role: 'roland', text: a.text, src: a.src }]) });
+      set({ thinking: false, msgs: st.msgs.concat([{ role: 'rolly', text: a.text, src: a.src }]) });
     }, 800);
   }
   var SUGG_REAL = ['Which customers have the biggest overdue balances?', 'What contracts need attention this month?', 'Brief me on Open Country Dairy', 'How much loose bulk pellet stock can we promise?'];
   function vChat() {
-    if (!st.chatOpen) return '<button class="launch" data-chat="open">' + MARK.replace('width="28" height="38"', 'width="16" height="22"') + 'Ask Roland</button>';
+    if (!st.chatOpen) return '<button class="launch" data-chat="open">' + MARK.replace('width="28" height="38"', 'width="16" height="22"') + 'Ask Rolly</button>';
     var live = aiLive(), sugg = live ? SUGG_REAL : SUGG;
     var body = '';
     if (!st.msgs.length && !st.thinking) {
       body = '<div class="msg-r" style="border-left-color:var(--nf-olive)">' + (live
-        ? 'Kia ora' + (VIEWER.first ? ' ' + esc(VIEWER.first) : '') + ', I’m Roland. Ask me about customers, sales, payments, contracts, prospects, quotes, stock or prices, and I’ll look it up in Roland’s data.'
-        : 'Kia ora, I’m Roland. Ask me about a customer, a deal, stock, orders or your emails, and I’ll pull it together from the CRM, SAP and Outlook.') + '</div>' +
+        ? 'Kia ora' + (VIEWER.first ? ' ' + esc(VIEWER.first) : '') + ', I’m Rolly. Ask me about customers, sales, payments, contracts, prospects, quotes, stock or prices, and I’ll look it up in Rolly’s data.'
+        : 'Kia ora, I’m Rolly. Ask me about a customer, a deal, stock, orders or your emails, and I’ll pull it together from the CRM, SAP and Outlook.') + '</div>' +
         '<div class="eyebrow">Try asking</div>' + sugg.map(function (q, i) { return '<button class="chip" data-sugg="' + i + '">' + esc(q) + '</button>'; }).join('');
     } else {
       body = st.msgs.map(function (m) {
         if (m.role === 'user') return '<div class="msg-u">' + esc(m.text) + '</div>';
         if (m.live) return '<div class="msg-r"><div id="ai-live">' + (m.text ? fmtAi(m.text) : '') + '</div>' + (!m.text ? '<div class="muted small" id="ai-status">' + esc(st.aiStatus || 'Thinking…') + '</div>' : '') + '</div>';
         return '<div class="msg-r' + (m.error ? ' muted' : '') + '">' + (m.src ? esc(m.text) + '<div class="src">' + esc(m.src) + '</div>' : fmtAi(m.text)) + (m.truncated ? '<div class="tiny">Cut short. Ask for less at a time.</div>' : '') + '</div>';
-      }).join('') + (st.thinking && !live ? '<div class="msg-r muted">Roland is checking the CRM, SAP and Outlook…</div>' : '');
+      }).join('') + (st.thinking && !live ? '<div class="msg-r muted">Rolly is checking the CRM, SAP and Outlook…</div>' : '');
     }
-    var sub = live ? 'Answers from Claude on your account · Roland’s data' : 'Your sales assistant · sample answers';
-    var foot = live ? 'Roland looks things up in this page’s data and may still make mistakes; check figures before you rely on them. It cannot send or change anything.'
+    var sub = live ? 'Answers from Claude on your account · Rolly’s data' : 'Your sales assistant · sample answers';
+    var foot = live ? 'Rolly looks things up in this page’s data and may still make mistakes; check figures before you rely on them. It cannot send or change anything.'
       : (AI && !REAL ? 'Live answers need the real data loaded.' : 'Sample answers. Live answers from Claude work when this page is opened in claude.ai.');
-    return '<section class="chat" aria-label="Ask Roland"><div class="chat-h">' + MARK + '<div style="flex:1"><div class="t">Roland</div><div class="s">' + esc(sub) + '</div></div>' +
-      '<button class="iconbtn" style="font-size:14px" data-chat="reset">New chat</button><button class="iconbtn" aria-label="Close Ask Roland" data-chat="close">×</button></div>' +
+    return '<section class="chat" aria-label="Ask Rolly"><div class="chat-h">' + MARK + '<div style="flex:1"><div class="t">Rolly</div><div class="s">' + esc(sub) + '</div></div>' +
+      '<button class="iconbtn" style="font-size:14px" data-chat="reset">New chat</button><button class="iconbtn" aria-label="Close Ask Rolly" data-chat="close">×</button></div>' +
       '<div class="chat-b" id="chatb">' + body + '</div>' +
-      '<form class="chat-f" id="chatf"><label class="sr" for="chatq">Ask Roland a question</label><input id="chatq" type="text" placeholder="Ask Roland anything…" autocomplete="off">' +
+      '<form class="chat-f" id="chatf"><label class="sr" for="chatq">Ask Rolly a question</label><input id="chatq" type="text" placeholder="Ask Rolly anything…" autocomplete="off">' +
       (st.thinking && live ? '<button type="button" class="btn btn-quiet" style="height:44px" data-chat="stop">Stop</button>' : '<button class="btn btn-olive" style="height:44px">Ask</button>') + '</form>' +
       '<div class="tiny" style="padding:0 14px 10px;background:var(--surface)">' + esc(foot) + '</div></section>';
   }
@@ -2518,7 +2523,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       ? '<div class="source-bar"><strong>Real data</strong> · ' + esc(REAL.meta.source) + ' · invoices to ' + esc(longDate(REAL.meta.asOf)) + ' · pipeline from the sales plan · activities, comms and chat are samples · contains customer data: share only within Nature’s Flame</div>'
       : '';
     document.getElementById('app').innerHTML =
-      '<header class="top"><a class="brand" href="#" data-go="home">' + MARK + '<div><div class="name">Roland</div><div class="by">Nature’s Flame CRM</div></div></a>' +
+      '<header class="top"><a class="brand" href="#" data-go="home">' + MARK + '<div><div class="name">Rolly</div><div class="by">Nature’s Flame CRM</div></div></a>' +
       '<div class="search"><input type="search" aria-label="Search accounts, deals and contacts" placeholder="Search accounts, deals, contacts"></div>' +
       '<div class="top-right"><button class="btn btn-cta" data-go="prospectNew">+ New prospect</button>' + avatarHtml() + '</div></header>' + source +
       '<div class="body"><nav class="side" aria-label="Feature tree">' + side +
@@ -2638,7 +2643,7 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
   initAI();
   // Real data: embedded by `build_artifact.py --with-data`, or read from the local
   // (git-ignored) data/ folder. Without either, the page stays on sample data.
-  if (window.ROLAND_SNAPSHOT && window.ROLAND_SNAPSHOT.accounts) applySnapshot(window.ROLAND_SNAPSHOT);
+  if (window.ROLLY_SNAPSHOT && window.ROLLY_SNAPSHOT.accounts) applySnapshot(window.ROLLY_SNAPSHOT);
   render();
   if (!REAL) {
     fetch('../data/snapshot.json', { cache: 'no-store' })

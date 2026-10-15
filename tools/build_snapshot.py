@@ -1,4 +1,4 @@
-"""Turn Power BI query results (data/raw/*.csv) into data/snapshot.json for Roland.
+"""Turn Power BI query results (data/raw/*.csv) into data/snapshot.json for Rolly.
 
 The CSVs come from DAX queries run against the "Sales Analysis" model
 (see GAPS.md). data/ is git-ignored: it holds real customer data.

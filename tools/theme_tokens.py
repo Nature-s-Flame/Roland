@@ -1,7 +1,7 @@
-"""One-off: move Roland/portal text colours onto theme tokens and add a dark palette."""
+"""One-off: move Rolly/portal text colours onto theme tokens and add a dark palette."""
 import pathlib, sys
 
-ROOT = pathlib.Path(__file__).resolve().parent.parent / "roland"
+ROOT = pathlib.Path(__file__).resolve().parent.parent / "rolly"
 
 DARK = """  --heading:#DCE8CC; --chip:#2A3A34;
   --bg:#121D1A; --surface:#1A2925; --surface-2:#1F302B; --line:#30443D; --line-soft:#26372F;
