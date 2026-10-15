@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NF Customer Portal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&amp;family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F2EC}
+a{color:#B84E17}a:hover{color:#8F3A0F}
+.tab{border:0;background:transparent;font:inherit;font-size:15px;font-weight:600;color:#4F564D;padding:12px 4px;margin-right:22px;cursor:pointer;border-bottom:3px solid transparent;min-height:44px}
+.tab:hover{color:#1F3B2C}
+.tab.on{color:#1F3B2C;border-bottom-color:#D9682B}
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px;background:#FFFFFF}
+.tbl th{text-align:left;font-weight:600;color:#4F564D;font-size:13px;padding:11px 14px;border-bottom:1px solid #E2DED3;background:#FAF8F3;white-space:nowrap}
+.tbl td{padding:11px 14px;border-bottom:1px solid #EFECE4;vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.ghost{border:1px solid #1F3B2C;background:#FFFFFF;color:#1F3B2C;font:inherit;font-weight:600;font-size:14px;border-radius:8px;padding:0 14px;height:40px;cursor:pointer}
+.ghost:hover{background:#EEF2EC}
+.solid{border:0;background:#D9682B;color:#1C1208;font:inherit;font-weight:700;font-size:14px;border-radius:8px;padding:0 16px;height:40px;cursor:pointer}
+.dl{border:0;background:none;padding:0;font:inherit;font-size:14px;color:#B84E17;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+</style>
+</helmet>
+<div style="min-height: 100vh; font-family: 'Source Sans 3', system-ui, sans-serif; color: #1C2620; background: #F4F2EC">
+
+<header style="background: #1F3B2C; color: #FFFFFF; padding: 12px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px">
+<div style="display: flex; align-items: center; gap: 12px">
+<svg width="26" height="30" viewBox="0 0 26 30" aria-hidden="true"><path d="M13 1c2 5 8 8 8 15a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 1 5 3 6-1-5 0-9 1-13z" fill="#E07A3C"></path><path d="M13 14c2 2 3 4 3 6a3 3 0 0 1-6 0c0-2 1-4 3-6z" fill="#F6C46A"></path></svg>
+<div style="font-family: Archivo, sans-serif; font-weight: 700; font-size: 19px">Nature's Flame</div>
+<div style="width: 1px; height: 22px; background: rgba(255,255,255,0.3)"></div>
+<div style="font-size: 15px; color: #D7E2D9">Customer portal</div>
+</div>
+<div style="margin-left: auto; display: flex; align-items: center; gap: 14px; flex-wrap: wrap">
+<span style="font-size: 14px; color: #D7E2D9">Southern Hearth Merchants</span>
+<div aria-label="Signed in as Grace Moana" style="width: 36px; height: 36px; border-radius: 50%; background: #F6C46A; color: #1F3B2C; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">GM</div>
+<a href="Main.dc.html" style="color: #F6C46A; font-size: 13.5px; font-weight: 600">Back to CRM mock</a>
+</div>
+</header>
+
+<div style="background: #FBE8C8; color: #5A3D00; font-size: 13.5px; padding: 8px 24px">Mock-up for discussion. Fictitious customer, orders and amounts. A customer sees only their own account.</div>
+
+<main style="max-width: 1180px; margin: 0 auto; padding: 28px 24px 56px; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px">
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 30px; color: #1F3B2C">Kia ora, Grace</h1>
+<p style="margin: 6px 0 0; font-size: 15.5px; color: #4F564D">Southern Hearth Merchants · customer no. 100482 · updated 06:00 today</p>
+</div>
+<button class="ghost" onClick="{{toggleMsg}}">Message your account manager</button>
+</div>
+
+<sc-if value="{{msgOpen}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="font-weight: 700; font-size: 15px">To Rep B, your account manager</div>
+<label style="font-size: 13px; color: #4F564D">Your message
+<textarea rows="3" placeholder="e.g. Can we bring SO-48195 forward a week?" style="display: block; width: 100%; box-sizing: border-box; margin-top: 4px; border: 1px solid #D6D1C4; border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14.5px"></textarea>
+</label>
+<div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap">
+<button class="solid" onClick="{{toggleMsg}}">Send</button>
+<span style="font-size: 13px; color: #4F564D">Rep B is emailed and the message is logged on your account in the CRM.</span>
+</div>
+</div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px">
+<sc-for list="{{tiles}}" as="k" hint-placeholder-count="4">
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 12px; padding: 16px 18px">
+<div style="font-size: 13px; color: #4F564D">{{k.label}}</div>
+<div style="font-family: Archivo, sans-serif; font-weight: 700; font-size: 25px; color: #1F3B2C; margin-top: 4px">{{k.value}}</div>
+<div style="font-size: 12.5px; color: #5A6158; margin-top: 2px">{{k.note}}</div>
+</div>
+</sc-for>
+</div>
+
+<nav aria-label="Portal sections" style="display: flex; flex-wrap: wrap; border-bottom: 1px solid #E2DED3">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="5">
+<button class="{{t.cls}}" onClick="{{t.go}}">{{t.label}}</button>
+</sc-for>
+</nav>
+
+<sc-if value="{{isOrders}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 22px">
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 600; font-size: 18px; color: #1F3B2C">Current orders</h2>
+<div style="overflow-x: auto; border: 1px solid #E2DED3; border-radius: 12px">
+<table class="tbl">
+<thead><tr><th>Order</th><th>Product</th><th>Quantity</th><th>Delivery date</th><th>Status</th></tr></thead>
+<tbody>
+<sc-for list="{{orders}}" as="o" hint-placeholder-count="3">
+<tr><td style="font-weight: 600">{{o.no}}</td><td>{{o.product}}</td><td>{{o.qty}}</td><td>{{o.date}}</td><td><span style="font-size: 12.5px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: {{o.bg}}; color: {{o.fg}}">{{o.status}}</span></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 600; font-size: 18px; color: #1F3B2C">Recent deliveries</h2>
+<div style="overflow-x: auto; border: 1px solid #E2DED3; border-radius: 12px">
+<table class="tbl">
+<thead><tr><th>Delivery</th><th>Order</th><th>Delivered</th><th>Quantity</th><th>Docket</th></tr></thead>
+<tbody>
+<sc-for list="{{deliveries}}" as="d" hint-placeholder-count="3">
+<tr><td style="font-weight: 600">{{d.no}}</td><td>{{d.order}}</td><td>{{d.date}}</td><td>{{d.qty}}</td><td><button class="dl">Download PDF</button></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{isQuotes}}" hint-placeholder-val="{{ false }}">
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; max-width: 760px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap">
+<div>
+<div style="font-size: 13px; color: #4F564D">Quote Q-2026-038</div>
+<h2 style="margin: 2px 0 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 21px; color: #1F3B2C">Winter 2027 bagged range</h2>
+</div>
+<span style="font-size: 12.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: {{quote.bg}}; color: {{quote.fg}}">{{quote.status}}</span>
+</div>
+<sc-for list="{{quoteLines}}" as="q" hint-placeholder-count="5">
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-top: 1px solid #EFECE4; font-size: 15px">
+<span style="color: #4F564D">{{q.k}}</span>
+<span style="font-weight: 600; text-align: right">{{q.v}}</span>
+</div>
+</sc-for>
+<sc-if value="{{quote.open}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; gap: 10px; flex-wrap: wrap">
+<button class="solid" onClick="{{accept}}">Accept quote</button>
+<button class="ghost" onClick="{{toggleMsg}}">Ask a question</button>
+</div>
+</sc-if>
+<sc-if value="{{quote.done}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 0; font-size: 14.5px; color: #1F3B2C; font-weight: 600">Thank you. Rep B has been notified and will confirm delivery scheduling. The deal updates to Won in the CRM.</p>
+</sc-if>
+</section>
+</sc-if>
+
+<sc-if value="{{isInvoices}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="overflow-x: auto; border: 1px solid #E2DED3; border-radius: 12px">
+<table class="tbl">
+<thead><tr><th>Invoice</th><th>Date</th><th>Amount</th><th>Due</th><th>Status</th><th>PDF</th></tr></thead>
+<tbody>
+<sc-for list="{{invoices}}" as="i" hint-placeholder-count="3">
+<tr><td style="font-weight: 600">{{i.no}}</td><td>{{i.date}}</td><td style="font-weight: 600">{{i.amount}}</td><td>{{i.due}}</td><td><span style="font-size: 12.5px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: {{i.bg}}; color: {{i.fg}}">{{i.status}}</span></td><td><button class="dl">Download</button></td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+<p style="margin: 0; font-size: 13.5px; color: #4F564D">Amounts from NF's finance system, updated daily. Payment terms: 20th of the month following invoice.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{isAvail}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px">
+<sc-for list="{{avail}}" as="a" hint-placeholder-count="3">
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 12px; padding: 16px 18px">
+<div style="font-weight: 700; font-size: 15.5px">{{a.name}}</div>
+<div style="font-size: 13px; color: #4F564D; margin-top: 2px">{{a.grade}}</div>
+<div style="margin-top: 12px"><span style="font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: {{a.bg}}; color: {{a.fg}}">{{a.status}}</span></div>
+<div style="font-size: 13.5px; color: #2B3A31; margin-top: 8px">{{a.lead}}</div>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 13.5px; color: #4F564D">Availability is shown as a status and lead time, not stock levels. Ask your account manager about larger volumes.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{isCerts}}" hint-placeholder-val="{{ false }}">
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 6px 20px; max-width: 760px">
+<sc-for list="{{certs}}" as="c" hint-placeholder-count="4">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid #EFECE4">
+<div>
+<div style="font-weight: 700; font-size: 15px">{{c.name}}</div>
+<div style="font-size: 13px; color: #4F564D">{{c.note}}</div>
+</div>
+<button class="dl">Download</button>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 12px; padding: 14px 18px; font-size: 14px">
+<span><strong>Rep B</strong> · your account manager · [phone] · [email]</span>
+<span style="color: #4F564D">Need help with the portal? Contact [support address]</span>
+</footer>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'orders', accepted: false, msg: false };
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var TABS = [['orders', 'Orders & deliveries'], ['quotes', 'Quotes'], ['invoices', 'Invoices'], ['avail', 'Product availability'], ['certs', 'Certificates']];
+    var badge = { Scheduled: ['#ECE9E0', '#4F564D'], Picking: ['#DCE6EF', '#1E3E5C'], Open: ['#FBEBC9', '#6B4A00'], Paid: ['#DCE8DD', '#1F3B2C'] };
+    var tag = function (o, s) { return Object.assign({}, o, { bg: badge[s][0], fg: badge[s][1] }); };
+    return {
+      tabs: TABS.map(function (t) { return { label: t[1], cls: st.tab === t[0] ? 'tab on' : 'tab', go: function () { self.setState({ tab: t[0] }); } }; }),
+      isOrders: st.tab === 'orders', isQuotes: st.tab === 'quotes', isInvoices: st.tab === 'invoices', isAvail: st.tab === 'avail', isCerts: st.tab === 'certs',
+      msgOpen: st.msg,
+      toggleMsg: function () { self.setState({ msg: !self.state.msg }); },
+      accept: function () { self.setState({ accepted: true }); },
+      tiles: [
+        { label: 'Current orders', value: '3', note: '640 t on order' },
+        { label: 'Next delivery', value: '14 Oct', note: 'SO-48211 · 220 t' },
+        { label: 'Open quotes', value: st.accepted ? '0' : '1', note: st.accepted ? 'Q-2026-038 accepted' : 'Winter 2027 range' },
+        { label: 'Amount due', value: 'NZ$84,320', note: 'due 20 Oct' }
+      ],
+      orders: [
+        tag({ no: 'SO-48211', product: 'Premium A1 pellets · 1 t bulk bags', qty: '220 t', date: 'Tue 14 Oct', status: 'Scheduled' }, 'Scheduled'),
+        tag({ no: 'SO-48207', product: 'Premium A1 pellets · 15 kg bags', qty: '240 t', date: 'Thu 16 Oct', status: 'Picking' }, 'Picking'),
+        tag({ no: 'SO-48195', product: 'Premium A1 pellets · 1 t bulk bags', qty: '180 t', date: 'Thu 23 Oct', status: 'Scheduled' }, 'Scheduled')
+      ],
+      deliveries: [
+        { no: 'DN-77310', order: 'SO-48166', date: '2 Oct 2026', qty: '200 t' },
+        { no: 'DN-77288', order: 'SO-48150', date: '25 Sep 2026', qty: '160 t' },
+        { no: 'DN-77241', order: 'SO-48121', date: '11 Sep 2026', qty: '175 t' }
+      ],
+      quote: st.accepted
+        ? { status: 'Accepted', bg: '#DCE8DD', fg: '#1F3B2C', open: false, done: true }
+        : { status: 'Open · price held to 30 Nov', bg: '#FBEBC9', fg: '#6B4A00', open: true, done: false },
+      quoteLines: [
+        { k: 'Products', v: 'Premium A1 · 1 t bulk bags and 15 kg bags' },
+        { k: 'Volume', v: '600 t across 34 stores' },
+        { k: 'Delivery window', v: 'April to August 2027' },
+        { k: 'Total (excl. GST)', v: 'NZ$312,000' },
+        { k: 'Valid until', v: '30 November 2026' }
+      ],
+      invoices: [
+        tag({ no: 'INV-90412', date: '18 Sep 2026', amount: 'NZ$84,320', due: '20 Oct 2026', status: 'Open' }, 'Open'),
+        tag({ no: 'INV-90377', date: '4 Sep 2026', amount: 'NZ$61,200', due: '20 Sep 2026', status: 'Paid' }, 'Paid'),
+        tag({ no: 'INV-90330', date: '21 Aug 2026', amount: 'NZ$58,900', due: '20 Sep 2026', status: 'Paid' }, 'Paid')
+      ],
+      avail: [
+        { name: 'Premium A1 · 1 t bulk bags', grade: 'DINplus A1', status: 'Available now', lead: 'Dispatch within 3 working days', bg: '#DCE8DD', fg: '#1F3B2C' },
+        { name: 'Premium A1 · 15 kg bags', grade: 'DINplus A1', status: 'Limited', lead: 'Lead time about 2 weeks', bg: '#FBEBC9', fg: '#6B4A00' },
+        { name: 'Premium A1 · bulk, blown', grade: 'DINplus A1', status: 'Available now', lead: 'Next delivery run in your region: Tue', bg: '#DCE8DD', fg: '#1F3B2C' }
+      ],
+      certs: [
+        { name: 'FSC chain-of-custody certificate', note: 'Current certificate · PDF' },
+        { name: 'DINplus A1 certificate', note: 'ISO 17225-2 · PDF' },
+        { name: 'BioGro input certificate', note: 'Current certificate · PDF' },
+        { name: 'Latest quality test results', note: 'Batch tests for your recent deliveries' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nature's Flame · Customer portal</title>
+<style>
+@font-face{font-family:"Open Sans";src:url(fonts/OpenSans-Regular.ttf) format("truetype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Open Sans";src:url(fonts/OpenSans-SemiBold.ttf) format("truetype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Open Sans";src:url(fonts/OpenSans-Bold.ttf) format("truetype");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"Open Sans Condensed";src:url(fonts/OpenSans_Condensed-Light.ttf) format("truetype");font-weight:300;font-display:swap}
+@font-face{font-family:"Open Sans Condensed";src:url(fonts/OpenSans_Condensed-Regular.ttf) format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"Open Sans Condensed";src:url(fonts/OpenSans_Condensed-SemiBold.ttf) format("truetype");font-weight:600;font-display:swap}
+@font-face{font-family:"Open Sans Condensed";src:url(fonts/OpenSans_Condensed-Bold.ttf) format("truetype");font-weight:700;font-display:swap}
+
+/* Nature's Flame brand tokens (Style Guide, Nov 2022) — same set as index.html */
+:root{
+  --heading:#1D332F; --chip:#ECEFE6; --wordmark:#66783C; color-scheme:light;
+  --alert-bg:#F6E3D8; --alert-ink:#8A3A16; --alert-bar:#B5532A; --amber-bar:#C9A227;
+  --nf-green:#82A519; --nf-olive:#66783C; --nf-sage:#CDDCB9; --nf-sand:#CDC896; --nf-forest:#1D332F;
+  --bg:#F5F7F0; --surface:#FFFFFF; --surface-2:#FAFBF6; --line:#DDE3D2; --line-soft:#ECEFE4;
+  --ink:#1D2A26; --ink-2:#47534C; --ink-3:#5E6A62; --link:#55662F; --link-hover:#3E4C20;
+  --sage-soft:#E6EEDA; --sand-soft:#EFEDD9; --sand-ink:#5B5524; --info-bg:#DDE7E4; --info-ink:#1D332F;
+  --cond:"Open Sans Condensed","Open Sans",system-ui,sans-serif; --sans:"Open Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --heading:#DCE8CC; --wordmark:#A9C55A; --chip:#2A3A34;
+  --bg:#121D1A; --surface:#1A2925; --surface-2:#1F302B; --line:#30443D; --line-soft:#26372F;
+  --ink:#E6ECE2; --ink-2:#B9C5B8; --ink-3:#97A598; --link:#A9C55A; --link-hover:#C3DB7A;
+  --sage-soft:#24372C; --sand-soft:#3A3724; --sand-ink:#E2DCA8;
+  --alert-bg:#4A2A1C; --alert-ink:#F2B9A0; --alert-bar:#D9774F; --amber-bar:#D8B84A; --info-bg:#233A36; --info-ink:#CFE3DD;
+  --shadow:0 10px 28px rgba(0,0,0,.45); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --heading:#DCE8CC; --wordmark:#A9C55A; --chip:#2A3A34;
+  --bg:#121D1A; --surface:#1A2925; --surface-2:#1F302B; --line:#30443D; --line-soft:#26372F;
+  --ink:#E6ECE2; --ink-2:#B9C5B8; --ink-3:#97A598; --link:#A9C55A; --link-hover:#C3DB7A;
+  --sage-soft:#24372C; --sand-soft:#3A3724; --sand-ink:#E2DCA8;
+  --alert-bg:#4A2A1C; --alert-ink:#F2B9A0; --alert-bar:#D9774F; --amber-bar:#D8B84A; --info-bg:#233A36; --info-ink:#CFE3DD;
+  --shadow:0 10px 28px rgba(0,0,0,.45); color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+a{color:var(--link)}a:hover{color:var(--link-hover)}
+h1,h2{font-family:var(--cond);color:var(--heading);margin:0}
+h1{font-weight:600;font-size:34px;letter-spacing:.2px}
+h2{font-weight:600;font-size:21px;letter-spacing:.2px}
+.eyebrow{font-family:var(--cond);font-weight:400;text-transform:uppercase;letter-spacing:1.4px;font-size:13px;color:var(--ink-3)}
+.muted{color:var(--ink-2)}
+.small{font-size:13.5px}
+:focus-visible{outline:3px solid var(--nf-green);outline-offset:2px}
+
+.top{background:var(--surface);border-bottom:4px solid var(--nf-green);padding:12px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo .w{font-family:var(--sans);font-weight:700;font-size:19px;line-height:1.02;color:var(--wordmark);letter-spacing:-.2px}
+.divider{width:1px;height:30px;background:var(--line)}
+.top .area{font-family:var(--cond);font-weight:400;text-transform:uppercase;letter-spacing:1.4px;font-size:14px;color:var(--ink-2)}
+.top-r{margin-left:auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--nf-sage);color:var(--nf-forest);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.back-crm{font-size:13.5px;font-weight:600}
+.notice{background:var(--sand-soft);color:var(--sand-ink);font-size:13.5px;padding:8px 24px}
+
+.hero{background:var(--nf-forest);color:#fff;position:relative;overflow:hidden}
+.hero-in{max-width:1180px;margin:0 auto;padding:30px 24px 32px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;position:relative;z-index:1}
+.hero h1{color:#fff}
+.hero p{margin:6px 0 0;color:var(--nf-sage);font-size:15.5px}
+.hero .swoosh{position:absolute;right:0;top:0;height:100%;width:auto;pointer-events:none}
+
+main{max-width:1180px;margin:0 auto;padding:24px 24px 56px;display:flex;flex-direction:column;gap:22px}
+@media (max-width:640px){main,.hero-in{padding-left:16px;padding-right:16px}.top,.notice{padding-left:16px;padding-right:16px}.hero .swoosh{top:auto;bottom:0;height:45%}}
+
+.btn{height:42px;padding:0 16px;border-radius:6px;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center}
+.btn-solid{border:0;background:var(--nf-olive);color:#fff}
+.btn-solid:hover{background:#55662F}
+.btn-ghost{border:1px solid var(--nf-olive);background:var(--surface);color:var(--heading)}
+.btn-ghost:hover{background:var(--sage-soft)}
+.btn-light{border:0;background:var(--nf-green);color:var(--nf-forest)}
+.btn-light:hover{background:#93B827}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--nf-green);border-radius:10px;padding:14px 18px}
+.kpi .l{font-size:13px;color:var(--ink-2)}
+.kpi .v{font-family:var(--cond);font-weight:700;font-size:30px;color:var(--heading);margin-top:2px;line-height:1.1}
+.kpi .n{font-size:12.5px;color:var(--ink-3);margin-top:2px}
+
+.tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--line);gap:0 24px}
+.tab{border:0;background:transparent;font-size:15px;font-weight:600;color:var(--ink-2);padding:12px 2px;cursor:pointer;border-bottom:3px solid transparent;min-height:46px;margin-bottom:-1px}
+.tab:hover{color:var(--heading)}
+.tab.on{color:var(--heading);border-bottom-color:var(--nf-green)}
+
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px}
+.tbl th{text-align:left;font-family:var(--cond);font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-2);font-size:13px;padding:11px 14px;border-bottom:2px solid var(--nf-sage);background:var(--surface-2);white-space:nowrap}
+.tbl td{padding:11px 14px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+
+.badge{font-size:12.5px;font-weight:600;padding:3px 9px;border-radius:5px;white-space:nowrap;display:inline-block}
+.s-Scheduled{background:var(--chip);color:var(--ink-2)}
+.s-Picking{background:var(--info-bg);color:var(--info-ink)}
+.s-Open,.s-Limited,.s-Held{background:var(--sand-soft);color:var(--sand-ink)}
+.s-Paid,.s-Available,.s-Accepted{background:var(--nf-sage);color:var(--nf-forest)}
+.dl{border:0;background:none;padding:0;font-size:14px;color:var(--link);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.dl:hover{color:var(--link-hover)}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-top:1px solid var(--line-soft);font-size:15px}
+.kv span:last-child{font-weight:600;text-align:right}
+.avail{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.avail .card{border-left:4px solid var(--nf-olive)}
+.avail .card.lim{border-left-color:var(--nf-sand)}
+textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);border-radius:6px;padding:8px 10px;font:inherit;font-size:14.5px;resize:vertical}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--nf-green);border-radius:10px;padding:14px 18px;font-size:14px}
+.ok{margin:0;font-size:14.5px;color:var(--heading);font-weight:600;background:var(--sage-soft);border-radius:6px;padding:10px 12px}
+
+/* Demo sign-in and real-data report */
+.signin{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 24px;background:var(--sand-soft);color:var(--sand-ink);border-bottom:1px dashed var(--nf-sand);font-size:13.5px}
+.signin select{flex:1 1 280px;max-width:520px;height:40px;border:1px solid var(--line);border-radius:6px;padding:0 10px;font:inherit;font-size:14.5px;background:var(--surface);color:var(--ink)}
+@media (max-width:640px){.signin{padding:10px 16px}}
+.card-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.info-card{border-left:4px solid var(--nf-olive);font-size:14.5px}
+.bal{font-family:var(--cond);font-weight:700;font-size:40px;color:var(--heading);margin:6px 0 12px;font-variant-numeric:tabular-nums}
+.age-bar{display:flex;height:16px;border-radius:4px;overflow:hidden;background:var(--chip)}
+.age-bar div{height:100%}
+.age-0{background:var(--nf-olive)}
+.age-1{background:var(--amber-bar)}
+.age-2,.age-3{background:var(--alert-bar)}
+.age-4{background:var(--alert-ink)}
+.age-legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 16px;margin-top:12px}
+.age-legend div{display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums}
+.age-legend .sw{display:inline-block;width:12px;height:12px;border-radius:3px}
+.s-Overdue{background:var(--alert-bg);color:var(--alert-ink)}
+.s-Delivered{background:var(--sage-soft);color:var(--heading)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // Two-leaf flame mark, drawn after the Nature's Flame logo (377C + 575C).
+  var MARK = '<svg width="28" height="38" viewBox="0 0 28 38" aria-hidden="true">' +
+    '<path d="M11.5 1C14 6 15 9.5 15 13.5c0 6-4.5 9-6.5 14.5-.9 2.6-.7 5.6-.2 8.7C3.6 32.7 1 28.7 1 24c0-5.6 4-9.4 6.6-14.3C9.3 6.6 10.6 4 11.5 1z" fill="#82A519"/>' +
+    '<path d="M20.5 15c2.4 3.9 6 8.5 6 12.6 0 5-4.3 6.3-8.1 9.3-1.1.9-2.1 1.9-2.9 3-.8-4.2-.9-8.4.6-12.2 1.4-3.7 3.6-7.1 4.4-12.7z" fill="#66783C" transform="translate(0,-3)"/>' +
+    '</svg>';
+  var SWOOSH = '<svg class="swoosh" viewBox="0 0 220 160" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">' +
+    '<path d="M150 0c22 26 34 52 34 82 0 34-26 52-48 78h84V0z" fill="#82A519" opacity=".85"/>' +
+    '<path d="M214 70c-8 28-30 46-40 90h46V58z" fill="#66783C"/>' +
+    '</svg>';
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function badge(s, label) { return '<span class="badge s-' + s + '">' + esc(label || s) + '</span>'; }
+
+  // ---------- Mock data (fictitious) ----------
+  var TABS = [['orders', 'Orders & deliveries'], ['quotes', 'Quotes'], ['invoices', 'Invoices'], ['avail', 'Product availability'], ['certs', 'Certificates']];
+  var ORDERS = [
+    { no: 'SO-48211', product: 'Premium A1 pellets · 1 t bulk bags', qty: '220 t', date: 'Tue 14 Oct', status: 'Scheduled' },
+    { no: 'SO-48207', product: 'Premium A1 pellets · 15 kg bags', qty: '240 t', date: 'Thu 16 Oct', status: 'Picking' },
+    { no: 'SO-48195', product: 'Premium A1 pellets · 1 t bulk bags', qty: '180 t', date: 'Thu 23 Oct', status: 'Scheduled' }
+  ];
+  var DELIVERIES = [
+    { no: 'DN-77310', order: 'SO-48166', date: '2 Oct 2026', qty: '200 t' },
+    { no: 'DN-77288', order: 'SO-48150', date: '25 Sep 2026', qty: '160 t' },
+    { no: 'DN-77241', order: 'SO-48121', date: '11 Sep 2026', qty: '175 t' }
+  ];
+  var QUOTE_LINES = [
+    ['Products', 'Premium A1 · 1 t bulk bags and 15 kg bags'],
+    ['Volume', '600 t across 34 stores'],
+    ['Delivery window', 'April to August 2027'],
+    ['Total (excl. GST)', 'NZ$312,000'],
+    ['Valid until', '30 November 2026']
+  ];
+  var INVOICES = [
+    { no: 'INV-90412', date: '18 Sep 2026', amount: 'NZ$84,320', due: '20 Oct 2026', status: 'Open' },
+    { no: 'INV-90377', date: '4 Sep 2026', amount: 'NZ$61,200', due: '20 Sep 2026', status: 'Paid' },
+    { no: 'INV-90330', date: '21 Aug 2026', amount: 'NZ$58,900', due: '20 Sep 2026', status: 'Paid' }
+  ];
+  var AVAIL = [
+    { name: 'Premium A1 · 1 t bulk bags', grade: 'DINplus A1', status: 'Available', label: 'Available now', lead: 'Dispatch within 3 working days' },
+    { name: 'Premium A1 · 15 kg bags', grade: 'DINplus A1', status: 'Limited', label: 'Limited', lead: 'Lead time about 2 weeks' },
+    { name: 'Premium A1 · bulk, blown', grade: 'DINplus A1', status: 'Available', label: 'Available now', lead: 'Next delivery run in your region: Tue' }
+  ];
+  var CERTS = [
+    ['FSC chain-of-custody certificate', 'Current certificate · PDF'],
+    ['DINplus A1 certificate', 'ISO 17225-2 · PDF'],
+    ['BioGro input certificate', 'Current certificate · PDF'],
+    ['Latest quality test results', 'Batch tests for your recent deliveries']
+  ];
+
+  var st = { tab: 'orders', accepted: false, msg: false, cust: null };
+  function set(p) { Object.assign(st, p); render(); }
+
+  // ---------- Real data (snapshot from Power BI) ----------
+  // Embedded by `build_artifact.py --with-data`, or read from the local, git-ignored data/ folder.
+  // The dropdown stands in for a customer signing in with their own credentials.
+  var DATA = null;
+  var REAL_TABS = [['orders', 'Recent orders'], ['payments', 'Payment position'], ['invoices', 'Invoices'], ['avail', 'Product availability'], ['certs', 'Certificates']];
+  function nz2(n) { return (n < 0 ? '−' : '') + 'NZ$' + Math.abs(n).toLocaleString('en-NZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function nz0(n) { return (n < 0 ? '−' : '') + 'NZ$' + Math.round(Math.abs(n)).toLocaleString('en-NZ'); }
+  function fmtDate(iso) { return iso ? new Date(iso + 'T00:00:00').toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'; }
+  function qty(n) { return (Math.round(n * 100) / 100).toLocaleString('en-NZ'); }
+  function loadData(s) {
+    if (!s || !s.accounts || !s.portal) return;
+    DATA = { meta: s.meta, asOf: s.portal.asOf, accounts: s.accounts.slice().sort(function (a, b) { return a.name.localeCompare(b.name); }), portal: s.portal.customers };
+    var saved = null;
+    try { saved = localStorage.getItem('roland.portal.customer'); } catch (e) { /* no storage */ }
+    var byId = {};
+    DATA.accounts.forEach(function (a) { byId[a.id] = a; });
+    DATA.byId = byId;
+    st.cust = saved && byId[saved] ? saved : (s.accounts[0] && s.accounts[0].id);
+    st.tab = 'orders';
+    render();
+  }
+  function customer() { return DATA && DATA.byId[st.cust]; }
+  function pdata() { return DATA && DATA.portal[st.cust]; }
+
+  function signInBar() {
+    var groups = {};
+    DATA.accounts.forEach(function (a) { (groups[a.seg] = groups[a.seg] || []).push(a); });
+    return '<div class="signin"><label for="cust-select"><strong>Demo sign-in</strong> · choose a customer to see the portal as they would</label>' +
+      '<select id="cust-select">' + Object.keys(groups).sort().map(function (g) {
+        return '<optgroup label="' + esc(g) + '">' + groups[g].map(function (a) {
+          return '<option value="' + esc(a.id) + '"' + (a.id === st.cust ? ' selected' : '') + '>' + esc(a.name) + (a.city ? ' · ' + esc(a.city) : '') + '</option>';
+        }).join('') + '</optgroup>';
+      }).join('') + '</select></div>';
+  }
+  function overdueOf(p) { var g = p.ageing; return g.d1_30 + g.d31_60 + g.d61_90 + g.d90; }
+  function statusBadge(s) { return badge(s === 'Paid' ? 'Paid' : s === 'Overdue' ? 'Overdue' : 'Open', s); }
+  function billNote(p) {
+    return p.billTo !== st.cust ? '<div class="card info-card"><strong>Your account is billed through ' + esc(p.billToName || p.billTo) + '.</strong> Payments are made by head office, so the balance and ageing below are for the head-office account. Your own invoices are listed with how much of each is still open.</div>' : '';
+  }
+  function vRealOrders() {
+    var p = pdata();
+    var rows = p.orders.map(function (o) {
+      var t = o.lines.reduce(function (s, l) { return s + l.t; }, 0);
+      var v = o.lines.reduce(function (s, l) { return s + l.v; }, 0);
+      return '<tr><td style="font-weight:600">' + esc(o.no) + '</td><td>' + esc(fmtDate(o.date)) + '</td><td>' + esc(o.ref || '—') + '</td>' +
+        '<td>' + o.lines.map(function (l) { return esc(l.item) + ' <span class="muted">× ' + esc(qty(l.qty)) + '</span>'; }).join('<br>') + '</td>' +
+        '<td class="num">' + (t ? esc(qty(t)) + ' t' : '—') + '</td><td class="num">' + (v ? esc(nz2(v)) : '—') + '</td><td>' + badge('Delivered', 'Invoiced') + '</td></tr>';
+    }).join('');
+    return '<section style="display:flex;flex-direction:column;gap:10px"><div class="card-head"><h2>Orders in the last 90 days</h2><span class="small muted">' + p.orders.length + ' order' + (p.orders.length === 1 ? '' : 's') + '</span></div>' +
+      (p.orders.length ? '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Invoice</th><th>Date</th><th>Your reference</th><th>Products</th><th class="num">Tonnes</th><th class="num">Value excl. GST</th><th>Status</th></tr></thead><tbody>' + rows + '</tbody></table></div>'
+        : '<div class="card"><p class="muted" style="margin:0">No orders invoiced in the last 90 days.</p></div>') +
+      '<p class="small muted" style="margin:0">Orders appear here once invoiced. Orders placed but not yet delivered will show when SAP sales orders are connected to the portal.</p></section>';
+  }
+  function ageingBar(g, total) {
+    var parts = [['current', 'Not yet due', 'age-0'], ['d1_30', '1–30 days overdue', 'age-1'], ['d31_60', '31–60 days', 'age-2'], ['d61_90', '61–90 days', 'age-3'], ['d90', 'Over 90 days', 'age-4']];
+    var sum = parts.reduce(function (s, p) { return s + Math.max(0, g[p[0]]); }, 0) || 1;
+    return '<div class="age-bar" role="img" aria-label="Balance by age">' + parts.filter(function (p) { return g[p[0]] > 0; }).map(function (p) {
+      return '<div class="' + p[2] + '" style="width:' + (g[p[0]] / sum * 100).toFixed(2) + '%" title="' + esc(p[1] + ': ' + nz2(g[p[0]])) + '"></div>';
+    }).join('') + '</div><div class="age-legend">' + parts.map(function (p) {
+      return '<div><span class="sw ' + p[2] + '"></span><span class="small muted">' + esc(p[1]) + '</span><strong>' + esc(nz2(g[p[0]])) + '</strong></div>';
+    }).join('') + '</div>';
+  }
+  function vPayments() {
+    var p = pdata();
+    var open = p.invoices.filter(function (i) { return i.open > 0; });
+    return billNote(p) +
+      '<section class="card"><div class="card-head"><h2>Account balance</h2><span class="small muted">as at ' + esc(fmtDate(DATA.asOf)) + ' · incl. GST</span></div>' +
+      '<div class="bal">' + esc(nz2(p.balance)) + (p.balance < 0 ? ' <span class="small muted">in credit</span>' : '') + '</div>' +
+      (p.balance > 0 ? ageingBar(p.ageing, p.balance) : '<p class="muted" style="margin:6px 0 0">Nothing owing. Thank you.</p>') +
+      '<div style="margin-top:14px">' + [['Overdue', nz2(overdueOf(p)) + (overdueOf(p) > 0 ? ' · please arrange payment' : '')], ['Last payment received', fmtDate(p.lastPay)],
+        ['Paid in the last 90 days', nz2(p.paid90)], ['Invoiced in the last 90 days', nz2(p.invoiced90)]].map(function (f) {
+        return '<div class="kv"><span class="muted">' + esc(f[0]) + '</span><span>' + esc(f[1]) + '</span></div>';
+      }).join('') + '</div></section>' +
+      '<section style="display:flex;flex-direction:column;gap:10px"><h2>Your open invoices</h2>' +
+      (open.length ? '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Invoice</th><th>Date</th><th>Due</th><th>Your reference</th><th class="num">Invoice total</th><th class="num">Still open</th><th>Status</th></tr></thead><tbody>' +
+        open.map(function (i) { return '<tr><td style="font-weight:600">' + esc(i.no) + '</td><td>' + esc(fmtDate(i.date)) + '</td><td>' + esc(fmtDate(i.due)) + '</td><td>' + esc(i.ref || '—') + '</td><td class="num">' + esc(nz2(i.total)) + '</td><td class="num" style="font-weight:700">' + esc(nz2(i.open)) + '</td><td>' + statusBadge(i.status) + '</td></tr>'; }).join('') +
+        '</tbody></table></div>' : '<div class="card"><p class="muted" style="margin:0">No open invoices on your account.</p></div>') +
+      '<p class="small muted" style="margin:0">Payments are matched to your oldest invoices first. Amounts from Nature’s Flame’s finance system (SAP) to ' + esc(fmtDate(DATA.asOf)) + '.</p></section>';
+  }
+  function vRealInvoices() {
+    var p = pdata();
+    return billNote(p) + (p.invoices.length ? '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Invoice</th><th>Date</th><th>Due</th><th>Your reference</th><th class="num">Amount incl. GST</th><th>Status</th></tr></thead><tbody>' +
+      p.invoices.map(function (i) { return '<tr><td style="font-weight:600">' + esc(i.no) + '</td><td>' + esc(fmtDate(i.date)) + '</td><td>' + esc(fmtDate(i.due)) + '</td><td>' + esc(i.ref || '—') + '</td><td class="num" style="font-weight:700">' + esc(nz2(i.total)) + '</td><td>' + statusBadge(i.status) + '</td></tr>'; }).join('') +
+      '</tbody></table></div>' : '<div class="card"><p class="muted" style="margin:0">No invoices in the last 12 months.</p></div>') +
+      '<p class="small muted" style="margin:0">Your 15 most recent invoices from the last 12 months. Credit notes and rebates are applied to the account balance.</p>';
+  }
+  var REAL_VIEWS = { orders: vRealOrders, payments: vPayments, invoices: vRealInvoices, avail: vAvail, certs: vCerts };
+
+  function renderReal() {
+    var a = customer(), p = pdata();
+    if (!a || !p) { document.getElementById('app').innerHTML = signInBar(); return; }
+    var t90 = p.orders.reduce(function (s, o) { return s + o.lines.reduce(function (x, l) { return x + l.t; }, 0); }, 0);
+    var rep = a.owner || 'the Nature’s Flame sales team';
+    var tiles = [
+      ['Orders, last 90 days', String(p.orders.length), t90 ? qty(t90) + ' t delivered' : 'invoiced orders'],
+      ['Balance owing', nz0(p.balance), p.billTo !== st.cust ? 'head-office account' : 'incl. GST'],
+      ['Overdue', nz0(overdueOf(p)), overdueOf(p) > 0 ? 'past due date' : 'nothing overdue'],
+      ['Last payment', fmtDate(p.lastPay), nz0(p.paid90) + ' in last 90 days']
+    ];
+    var tab = REAL_VIEWS[st.tab] ? st.tab : 'orders';
+    document.getElementById('app').innerHTML = signInBar() +
+      '<header class="top"><a class="logo" href="#" aria-label="Nature’s Flame">' + MARK + '<span class="w">Nature’s<br>Flame</span></a><span class="divider"></span><span class="area">Customer portal</span>' +
+      '<div class="top-r"><span class="small muted">' + esc(a.name) + '</span><div class="avatar" aria-label="Signed in as ' + esc(a.name) + '">' + esc(a.name.replace(/[^A-Za-z ]/g, '').split(/\s+/).filter(Boolean).map(function (w) { return w.charAt(0); }).join('').slice(0, 2).toUpperCase()) + '</div><a class="back-crm" href="index.html">← Back to Roland CRM</a></div></header>' +
+      '<div class="notice">Real customer data from SAP via Power BI, to ' + esc(fmtDate(DATA.asOf)) + '. A real customer would see only their own account. Contains customer data: share only within Nature’s Flame.</div>' +
+      '<section class="hero">' + SWOOSH + '<div class="hero-in"><div><div class="eyebrow" style="color:var(--nf-green)">Fuelling your future</div><h1>Kia ora, ' + esc(a.name) + '</h1><p>Customer no. ' + esc(a.id) + ' · ' + esc(a.seg) + (a.city ? ' · ' + esc(a.city) : '') + ' · updated ' + esc(fmtDate(DATA.asOf)) + '</p></div>' +
+      '<button class="btn btn-light" data-act="msg">Message your account manager</button></div></section>' +
+      '<main>' +
+      (st.msg ? '<div class="card" style="display:flex;flex-direction:column;gap:10px;border-left:4px solid var(--nf-green)"><div style="font-weight:700">To ' + esc(rep) + '</div>' +
+        '<label class="small muted" for="msg-body">Your message</label><textarea id="msg-body" rows="3" placeholder="e.g. Can you send a statement for September?"></textarea>' +
+        '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn btn-solid" data-act="msg">Close</button><span class="small muted">In the real portal this emails your account manager and logs the message on your account in Roland.</span></div></div>' : '') +
+      '<div class="tiles">' + tiles.map(function (k) { return '<div class="kpi"><div class="l">' + esc(k[0]) + '</div><div class="v">' + esc(k[1]) + '</div><div class="n">' + esc(k[2]) + '</div></div>'; }).join('') + '</div>' +
+      '<nav class="tabs" aria-label="Portal sections">' + REAL_TABS.map(function (t) { return '<button class="tab' + (tab === t[0] ? ' on' : '') + '" data-tab="' + t[0] + '"' + (tab === t[0] ? ' aria-current="page"' : '') + '>' + t[1] + '</button>'; }).join('') + '</nav>' +
+      '<div style="display:flex;flex-direction:column;gap:22px">' + REAL_VIEWS[tab]() + '</div>' +
+      '<footer class="foot"><span><strong>' + esc(rep) + '</strong> · your account manager</span><span class="muted">Need help with the portal? Contact the Nature’s Flame office.</span></footer>' +
+      '</main>';
+  }
+
+  function vOrders() {
+    return '<section style="display:flex;flex-direction:column;gap:10px"><h2>Current orders</h2><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Order</th><th>Product</th><th class="num">Quantity</th><th>Delivery date</th><th>Status</th></tr></thead><tbody>' +
+      ORDERS.map(function (o) { return '<tr><td style="font-weight:600">' + o.no + '</td><td>' + esc(o.product) + '</td><td class="num">' + o.qty + '</td><td>' + o.date + '</td><td>' + badge(o.status) + '</td></tr>'; }).join('') +
+      '</tbody></table></div></section>' +
+      '<section style="display:flex;flex-direction:column;gap:10px"><h2>Recent deliveries</h2><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Delivery</th><th>Order</th><th>Delivered</th><th class="num">Quantity</th><th>Docket</th></tr></thead><tbody>' +
+      DELIVERIES.map(function (d) { return '<tr><td style="font-weight:600">' + d.no + '</td><td>' + d.order + '</td><td>' + d.date + '</td><td class="num">' + d.qty + '</td><td><button class="dl">Download PDF</button></td></tr>'; }).join('') +
+      '</tbody></table></div></section>';
+  }
+  function vQuotes() {
+    return '<section class="card" style="max-width:760px;display:flex;flex-direction:column;gap:12px;border-top:3px solid var(--nf-olive)">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><div class="eyebrow">Quote Q-2026-038</div><h2 style="font-size:24px;margin-top:2px">Winter 2027 bagged range</h2></div>' +
+      (st.accepted ? badge('Accepted') : badge('Held', 'Open · price held to 30 Nov')) + '</div>' +
+      '<div>' + QUOTE_LINES.map(function (q) { return '<div class="kv"><span class="muted">' + esc(q[0]) + '</span><span>' + esc(q[1]) + '</span></div>'; }).join('') + '</div>' +
+      (st.accepted
+        ? '<p class="ok">Thank you. Rep B has been notified and will confirm delivery scheduling. The deal updates to Won in the CRM.</p>'
+        : '<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-solid" data-act="accept">Accept quote</button><button class="btn btn-ghost" data-act="msg">Ask a question</button></div>') +
+      '</section>';
+  }
+  function vInvoices() {
+    return '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Invoice</th><th>Date</th><th class="num">Amount</th><th>Due</th><th>Status</th><th>PDF</th></tr></thead><tbody>' +
+      INVOICES.map(function (i) { return '<tr><td style="font-weight:600">' + i.no + '</td><td>' + i.date + '</td><td class="num" style="font-weight:700">' + i.amount + '</td><td>' + i.due + '</td><td>' + badge(i.status) + '</td><td><button class="dl">Download</button></td></tr>'; }).join('') +
+      '</tbody></table></div><p class="small muted" style="margin:0">Amounts from NF’s finance system, updated daily. Payment terms: 20th of the month following invoice.</p>';
+  }
+  function vAvail() {
+    return '<div class="avail">' + AVAIL.map(function (a) {
+      return '<div class="card' + (a.status === 'Limited' ? ' lim' : '') + '"><div style="font-weight:700;font-size:15.5px">' + esc(a.name) + '</div><div class="small muted">' + esc(a.grade) + '</div>' +
+        '<div style="margin-top:12px">' + badge(a.status, a.label) + '</div><div class="small" style="margin-top:8px">' + esc(a.lead) + '</div></div>';
+    }).join('') + '</div><p class="small muted" style="margin:0">Availability is shown as a status and lead time, not stock levels. Ask your account manager about larger volumes.</p>';
+  }
+  function vCerts() {
+    return '<div class="card" style="max-width:760px;padding:4px 20px">' + CERTS.map(function (c, i) {
+      return '<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;' + (i < CERTS.length - 1 ? 'border-bottom:1px solid var(--line-soft)' : '') + '"><div><div style="font-weight:700">' + esc(c[0]) + '</div><div class="small muted">' + esc(c[1]) + '</div></div><button class="dl">Download</button></div>';
+    }).join('') + '</div>';
+  }
+  var VIEWS = { orders: vOrders, quotes: vQuotes, invoices: vInvoices, avail: vAvail, certs: vCerts };
+
+  function render() {
+    if (DATA) { renderReal(); return; }
+    var tiles = [
+      ['Current orders', '3', '640 t on order'],
+      ['Next delivery', '14 Oct', 'SO-48211 · 220 t'],
+      ['Open quotes', st.accepted ? '0' : '1', st.accepted ? 'Q-2026-038 accepted' : 'Winter 2027 range'],
+      ['Amount due', 'NZ$84,320', 'due 20 Oct']
+    ];
+    document.getElementById('app').innerHTML =
+      '<header class="top"><a class="logo" href="#" aria-label="Nature’s Flame">' + MARK + '<span class="w">Nature’s<br>Flame</span></a><span class="divider"></span><span class="area">Customer portal</span>' +
+      '<div class="top-r"><span class="small muted">Southern Hearth Merchants</span><div class="avatar" aria-label="Signed in as Grace Moana">GM</div><a class="back-crm" href="index.html">← Back to Roland CRM mock</a></div></header>' +
+      '<div class="notice">Mock-up for discussion. Fictitious customer, orders and amounts. A customer sees only their own account.</div>' +
+      '<section class="hero">' + SWOOSH + '<div class="hero-in"><div><div class="eyebrow" style="color:var(--nf-green)">Fuelling your future</div><h1>Kia ora, Grace</h1><p>Southern Hearth Merchants · customer no. 100482 · updated 06:00 today</p></div>' +
+      '<button class="btn btn-light" data-act="msg">Message your account manager</button></div></section>' +
+      '<main>' +
+      (st.msg ? '<div class="card" style="display:flex;flex-direction:column;gap:10px;border-left:4px solid var(--nf-green)"><div style="font-weight:700">To Rep B, your account manager</div>' +
+        '<label class="small muted">Your message<textarea rows="3" placeholder="e.g. Can we bring SO-48195 forward a week?"></textarea></label>' +
+        '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="btn btn-solid" data-act="msg">Send</button><span class="small muted">Rep B is emailed and the message is logged on your account in the CRM.</span></div></div>' : '') +
+      '<div class="tiles">' + tiles.map(function (k) { return '<div class="kpi"><div class="l">' + k[0] + '</div><div class="v">' + k[1] + '</div><div class="n">' + k[2] + '</div></div>'; }).join('') + '</div>' +
+      '<nav class="tabs" aria-label="Portal sections">' + TABS.map(function (t) { return '<button class="tab' + (st.tab === t[0] ? ' on' : '') + '" data-tab="' + t[0] + '"' + (st.tab === t[0] ? ' aria-current="page"' : '') + '>' + t[1] + '</button>'; }).join('') + '</nav>' +
+      '<div style="display:flex;flex-direction:column;gap:22px">' + VIEWS[st.tab]() + '</div>' +
+      '<footer class="foot"><span><strong>Rep B</strong> · your account manager · [phone] · [email]</span><span class="muted">Need help with the portal? Contact [support address]</span></footer>' +
+      '</main>';
+  }
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-tab],[data-act]');
+    if (!el) return;
+    if (el.dataset.tab) set({ tab: el.dataset.tab });
+    else if (el.dataset.act === 'msg') { set({ msg: !st.msg }); if (st.msg) window.scrollTo(0, 0); }
+    else if (el.dataset.act === 'accept') set({ accepted: true });
+  });
+  document.addEventListener('change', function (e) {
+    if (e.target.id !== 'cust-select') return;
+    try { localStorage.setItem('roland.portal.customer', e.target.value); } catch (err) { /* no storage */ }
+    set({ cust: e.target.value, msg: false });
+    var sel = document.getElementById('cust-select'); if (sel) sel.focus();
+  });
+
+  render();
+  if (window.ROLAND_PORTAL) loadData(window.ROLAND_PORTAL);
+  else {
+    fetch('../data/snapshot.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(loadData)
+      .catch(function () { /* no snapshot: sample portal */ });
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# Real customer and pricing data from Power BI — never commit
+data/
+
+# Generated publish copy (rebuild with tools/build_artifact.py)
+artifact/
+
+# Original downloads
+*.zip
+
+# Python / OS clutter
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

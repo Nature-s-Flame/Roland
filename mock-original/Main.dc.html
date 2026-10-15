@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Roland · Nature's Flame CRM</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&amp;family=Source+Sans+3:wght@400;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F2EC}
+a{color:#B84E17}a:hover{color:#8F3A0F}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;border:0;background:transparent;padding:9px 10px;border-radius:8px;font:inherit;font-size:14.5px;color:#2B3A31;cursor:pointer;min-height:40px;box-sizing:border-box}
+.nav:hover{background:#E8ECE5}
+.nav.on{background:#1F3B2C;color:#FFFFFF}
+.feat{display:block;width:100%;text-align:left;border:1px solid #E2DED3;background:#FFFFFF;border-radius:10px;padding:11px 13px;font:inherit;cursor:pointer;color:inherit;margin:0;box-sizing:border-box}
+.feat:hover{border-color:#B84E17}
+.lnk{border:0;background:none;padding:0;font:inherit;color:#1F3B2C;font-weight:600;cursor:pointer;text-align:left;text-decoration:underline;text-underline-offset:3px}
+.lnk:hover{color:#B84E17}
+.back{border:0;background:none;font:inherit;color:#B84E17;cursor:pointer;padding:6px 0;font-weight:600;font-size:14px}
+.step{flex:1 1 0;min-width:96px;padding:9px 10px;font-size:13px;background:#ECE9E0;color:#4F564D;border-radius:6px;text-align:center}
+.step.done{background:#D5E2D6;color:#1F3B2C}
+.step.cur{background:#1F3B2C;color:#FFFFFF;font-weight:700}
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px;background:#FFFFFF}
+.tbl th{text-align:left;font-weight:600;color:#4F564D;font-size:13px;padding:11px 14px;border-bottom:1px solid #E2DED3;background:#FAF8F3;white-space:nowrap}
+.tbl td{padding:11px 14px;border-bottom:1px solid #EFECE4;vertical-align:top}
+.tbl tr:last-child td{border-bottom:0}
+.chip{border:1px solid #CFC9BA;background:#FFFFFF;color:#1F3B2C;font:inherit;font-size:13.5px;font-weight:600;border-radius:999px;padding:8px 14px;cursor:pointer;min-height:38px;text-align:left}
+.chip:hover{border-color:#D9682B;background:#FFF7F1}
+.askbar{display:flex;align-items:center;gap:12px;width:100%;box-sizing:border-box;border:1px solid #CFC9BA;background:#FFFFFF;border-radius:12px;padding:14px 16px;font:inherit;font-size:16px;color:#4F564D;cursor:text;text-align:left;min-height:52px}
+.askbar:hover{border-color:#1F3B2C}
+.launch{position:fixed;right:20px;bottom:20px;z-index:20;display:flex;align-items:center;gap:8px;border:0;border-radius:999px;background:#1F3B2C;color:#FFFFFF;font:inherit;font-weight:700;font-size:15px;padding:0 20px;height:52px;cursor:pointer;box-shadow:0 6px 18px rgba(20,30,24,0.25)}
+.launch:hover{background:#2A4D3A}
+.iconbtn{border:0;background:transparent;color:#FFFFFF;font:inherit;font-size:20px;width:40px;height:40px;border-radius:8px;cursor:pointer}
+.iconbtn:hover{background:rgba(255,255,255,0.12)}
+</style>
+</helmet>
+<div style="min-height: 100vh; font-family: 'Source Sans 3', system-ui, sans-serif; color: #1C2620; background: #F4F2EC; display: flex; flex-direction: column">
+
+<header style="background: #1F3B2C; color: #FFFFFF; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; padding: 12px 24px">
+<div style="display: flex; align-items: center; gap: 12px">
+<svg width="26" height="30" viewBox="0 0 26 30" aria-hidden="true"><path d="M13 1c2 5 8 8 8 15a8 8 0 0 1-16 0c0-4 2-6 4-8 0 3 1 5 3 6-1-5 0-9 1-13z" fill="#E07A3C"></path><path d="M13 14c2 2 3 4 3 6a3 3 0 0 1-6 0c0-2 1-4 3-6z" fill="#F6C46A"></path></svg>
+<div style="display: flex; flex-direction: column; line-height: 1.1">
+<div style="font-family: Archivo, sans-serif; font-weight: 700; font-size: 24px; letter-spacing: 0.3px; color: #FFFFFF">Roland</div>
+<div style="font-size: 12.5px; color: #D7E2D9; margin-top: 3px">The Nature's Flame CRM</div>
+</div>
+</div>
+<div style="flex: 1 1 260px; max-width: 460px">
+<input type="search" aria-label="Search accounts, deals and contacts" placeholder="Search accounts, deals, contacts" style="width: 100%; box-sizing: border-box; height: 40px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.1); color: #FFFFFF; padding: 0 14px; font: inherit; font-size: 14.5px">
+</div>
+<div style="display: flex; align-items: center; gap: 12px; margin-left: auto">
+<button onClick="{{goPipeline}}" style="height: 40px; padding: 0 16px; border: 0; border-radius: 8px; background: #D9682B; color: #1C1208; font: inherit; font-weight: 700; font-size: 14.5px; cursor: pointer">+ New deal</button>
+<div aria-label="Signed in as Kirsten" style="width: 36px; height: 36px; border-radius: 50%; background: #F6C46A; color: #1F3B2C; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px">K</div>
+</div>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; flex: 1 1 auto; align-items: stretch">
+
+<nav aria-label="Feature tree" style="flex: 1 1 240px; max-width: 290px; background: #FFFFFF; border-right: 1px solid #E2DED3; padding: 20px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px">
+<sc-for list="{{tree}}" as="group" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 0 10px 6px">
+<span style="font-family: Archivo, sans-serif; font-weight: 600; font-size: 12.5px; letter-spacing: 0.6px; text-transform: uppercase; color: #4F564D">{{group.name}}</span>
+<span style="font-size: 11.5px; color: #5A6158">{{group.tag}}</span>
+</div>
+<sc-for list="{{group.items}}" as="it" hint-placeholder-count="5">
+<button class="{{it.cls}}" onClick="{{it.go}}">
+<span>{{it.label}}</span>
+<sc-if value="{{it.planned}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 11px; padding: 2px 7px; border-radius: 999px; background: #F3E3D7; color: #7A3410">soon</span>
+</sc-if>
+<sc-if value="{{it.preview}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 11px; padding: 2px 7px; border-radius: 999px; background: #DCE6EF; color: #1E3E5C">{{it.badge}}</span>
+</sc-if>
+</button>
+</sc-for>
+</div>
+</sc-for>
+<div style="padding: 0 10px">
+<div style="font-family: Archivo, sans-serif; font-weight: 600; font-size: 12.5px; letter-spacing: 0.6px; text-transform: uppercase; color: #4F564D; padding-bottom: 8px">Stage 4 · Customer portal</div>
+<a href="Portal.dc.html" style="display: block; padding: 10px 12px; border-radius: 8px; background: #1F3B2C; color: #FFFFFF; text-decoration: none; font-size: 14px; font-weight: 600">See what a customer sees →</a>
+</div>
+<div style="margin-top: auto; padding: 12px 10px 0; border-top: 1px solid #EFECE4; font-size: 12.5px; color: #5A6158; line-height: 1.45">Mock-up for discussion. All names, prices and figures are fictitious.</div>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px 48px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+
+<sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 26px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 30px; color: #1F3B2C">Kia ora, Kirsten</h1>
+<p style="margin: 6px 0 0; font-size: 16px; color: #4F564D">Friday 9 October 2026 · 3 tasks due today · 1 deal needs attention</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 12px; padding: 16px 18px">
+<div style="font-size: 13px; color: #4F564D">{{k.label}}</div>
+<div style="font-family: Archivo, sans-serif; font-weight: 700; font-size: 26px; color: #1F3B2C; margin-top: 4px">{{k.value}}</div>
+<div style="font-size: 12.5px; color: #5A6158; margin-top: 2px">{{k.note}}</div>
+</div>
+</sc-for>
+</div>
+
+<section style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<h2 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 600; font-size: 20px; color: #1F3B2C">Feature tree</h2>
+<span style="font-size: 13.5px; color: #4F564D">Click any feature to open it</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px">
+<sc-for list="{{tree}}" as="group" hint-placeholder-count="3">
+<div style="background: #FBFAF6; border: 1px solid #E2DED3; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="font-family: Archivo, sans-serif; font-weight: 600; font-size: 16px; color: #1F3B2C">{{group.name}}</span>
+<span style="font-size: 12px; padding: 3px 9px; border-radius: 999px; background: {{group.tagBg}}; color: {{group.tagFg}}; font-weight: 600">{{group.tag}}</span>
+</div>
+<sc-for list="{{group.items}}" as="it" hint-placeholder-count="5">
+<button class="feat" onClick="{{it.go}}">
+<div style="font-weight: 700; font-size: 15px; color: #1C2620">{{it.label}}</div>
+<div style="font-size: 13.5px; color: #4F564D; margin-top: 2px; line-height: 1.4">{{it.desc}}</div>
+</button>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px">
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">My day</h2>
+<button class="back" onClick="{{goActivities}}">All activities</button>
+</div>
+<sc-for list="{{todayActs}}" as="a" hint-placeholder-count="3">
+<div style="display: flex; gap: 12px; padding: 10px 0; border-top: 1px solid #EFECE4; align-items: flex-start">
+<span style="flex: none; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: {{a.dueBg}}; color: {{a.dueFg}}">{{a.due}}</span>
+<div>
+<div style="font-weight: 600; font-size: 14.5px">{{a.type}}: {{a.what}}</div>
+<div style="font-size: 13px; color: #4F564D">{{a.acc}}</div>
+</div>
+</div>
+</sc-for>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<h2 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">Needs attention</h2>
+<button class="back" onClick="{{goPipeline}}">Open pipeline</button>
+</div>
+<sc-for list="{{stalled}}" as="d" hint-placeholder-count="1">
+<button class="feat" onClick="{{d.open}}" style="margin-top: 10px">
+<div style="display: flex; justify-content: space-between; gap: 8px; align-items: center">
+<span style="font-weight: 700; font-size: 14.5px">{{d.name}}</span>
+<span style="font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: #FBE3D6; color: #8F3A0F">Stalled {{d.idle}} days</span>
+</div>
+<div style="font-size: 13px; color: #4F564D; margin-top: 3px">{{d.accName}} · {{d.stage}} · {{d.valueFmt}}</div>
+</button>
+</sc-for>
+<p style="margin: 12px 0 0; font-size: 13px; color: #5A6158">Deals turn red when idle longer than their stage allows (Proposal sent: 10 days).</p>
+</section>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isPipeline}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">Pipeline</h1>
+<p style="margin: 4px 0 0; font-size: 15px; color: #4F564D">{{pipeSummary}}</p>
+</div>
+<span style="font-size: 13px; color: #4F564D">Drag cards between stages (in the real build)</span>
+</div>
+<div style="overflow-x: auto; padding-bottom: 8px">
+<div style="display: flex; gap: 12px; min-width: min-content">
+<sc-for list="{{columns}}" as="col" hint-placeholder-count="6">
+<div style="flex: 0 0 220px; background: #ECE9E0; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px">
+<div>
+<div style="font-family: Archivo, sans-serif; font-weight: 600; font-size: 14.5px; color: #1F3B2C">{{col.name}}</div>
+<div style="font-size: 12.5px; color: #4F564D">{{col.count}} · {{col.totalFmt}}</div>
+</div>
+<sc-for list="{{col.deals}}" as="d" hint-placeholder-count="1">
+<button class="feat" onClick="{{d.open}}">
+<sc-if value="{{d.stalled}}" hint-placeholder-val="{{ false }}">
+<div style="font-size: 11.5px; font-weight: 700; color: #8F3A0F; background: #FBE3D6; border-radius: 5px; padding: 2px 7px; display: inline-block; margin-bottom: 6px">Stalled {{d.idle}} days</div>
+</sc-if>
+<div style="font-weight: 700; font-size: 14px; line-height: 1.3">{{d.name}}</div>
+<div style="font-size: 12.5px; color: #4F564D; margin-top: 2px">{{d.accName}}</div>
+<div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 12.5px">
+<span style="font-weight: 600; color: #1F3B2C">{{d.valueFmt}}</span>
+<span style="color: #4F564D">{{d.tFmt}}</span>
+</div>
+<div style="font-size: 12px; color: #5A6158; margin-top: 4px">{{d.owner}} · {{d.close}}</div>
+</button>
+</sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isAccounts}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">Accounts &amp; contacts</h1>
+<p style="margin: 4px 0 0; font-size: 15px; color: #4F564D">7 accounts · 7 contacts</p>
+</div>
+<div style="overflow-x: auto; border: 1px solid #E2DED3; border-radius: 12px">
+<table class="tbl">
+<thead><tr><th>Account</th><th>Segment</th><th>Region</th><th>Est. tonnes/yr</th><th>Owner</th><th>Status</th></tr></thead>
+<tbody>
+<sc-for list="{{accounts}}" as="ac" hint-placeholder-count="5">
+<tr>
+<td><button class="lnk" onClick="{{ac.open}}">{{ac.name}}</button></td>
+<td>{{ac.seg}}</td>
+<td>{{ac.region}}</td>
+<td>{{ac.tFmt}}</td>
+<td>{{ac.owner}}</td>
+<td><span style="font-size: 12.5px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: {{ac.stBg}}; color: {{ac.stFg}}">{{ac.status}}</span></td>
+</tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isAccount}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<button class="back" onClick="{{goAccounts}}" style="align-self: flex-start">← Accounts</button>
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">{{acct.name}}</h1>
+<p style="margin: 4px 0 0; font-size: 15px; color: #4F564D">{{acct.seg}} · {{acct.region}} · {{acct.tFmt}} estimated · Owner {{acct.owner}}</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px">
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<h2 style="margin: 0 0 8px; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">Contacts</h2>
+<sc-for list="{{acctContacts}}" as="c" hint-placeholder-count="2">
+<div style="padding: 10px 0; border-top: 1px solid #EFECE4">
+<div style="font-weight: 700; font-size: 14.5px">{{c.name}}</div>
+<div style="font-size: 13px; color: #4F564D">{{c.title}} · {{c.role}}</div>
+</div>
+</sc-for>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<h2 style="margin: 0 0 8px; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">Deals</h2>
+<sc-for list="{{acctDeals}}" as="d" hint-placeholder-count="1">
+<button class="feat" onClick="{{d.open}}" style="margin-top: 8px">
+<div style="font-weight: 700; font-size: 14.5px">{{d.name}}</div>
+<div style="font-size: 13px; color: #4F564D">{{d.stage}} · {{d.valueFmt}} · {{d.tFmt}}</div>
+</button>
+</sc-for>
+<sc-if value="{{noAcctDeals}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 8px 0 0; font-size: 14px; color: #4F564D">No open deals.</p>
+</sc-if>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap">
+<h2 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">From SAP</h2>
+<span style="font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #DCE6EF; color: #1E3E5C">via Power BI</span>
+</div>
+<sc-if value="{{acctSap.has}}" hint-placeholder-val="{{ true }}">
+<sc-for list="{{acctSap.fields}}" as="f" hint-placeholder-count="5">
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 7px 0; border-top: 1px solid #EFECE4; font-size: 14px">
+<span style="color: #4F564D">{{f.k}}</span>
+<span style="font-weight: 600; text-align: right">{{f.v}}</span>
+</div>
+</sc-for>
+<div style="margin-top: 12px; font-size: 12.5px; color: #4F564D">Tonnes sold by month, last 12 months</div>
+<div style="display: flex; align-items: flex-end; gap: 4px; height: 80px; margin-top: 6px; border-bottom: 1px solid #D6D1C4">
+<sc-for list="{{acctSap.months}}" as="m" hint-placeholder-count="12">
+<div style="flex: 1 1 0; height: {{m.pct}}%; background: #1F3B2C; border-radius: 3px 3px 0 0" title="{{m.label}}"></div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 4px; margin-top: 4px">
+<sc-for list="{{acctSap.months}}" as="m" hint-placeholder-count="12">
+<span style="flex: 1 1 0; text-align: center; font-size: 10.5px; color: #5A6158">{{m.m}}</span>
+</sc-for>
+</div>
+<p style="margin: 10px 0 0; font-size: 12px; color: #5A6158">{{acctSap.asOf}}</p>
+</sc-if>
+<sc-if value="{{acctSap.none}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 10px 0 0; font-size: 14px; color: #4F564D">Not yet a customer in SAP, so there is no sales history. The SAP customer number is added when the first order is raised.</p>
+</sc-if>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap">
+<h2 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">Customer comms</h2>
+<span style="font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: #DCE6EF; color: #1E3E5C">Outlook &amp; Teams</span>
+</div>
+<sc-for list="{{acctComms}}" as="c" hint-placeholder-count="2">
+<div style="padding: 10px 0; border-top: 1px solid #EFECE4; margin-top: 8px">
+<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+<span style="font-size: 11.5px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: {{c.kindBg}}; color: {{c.kindFg}}">{{c.kind}}</span>
+<span style="font-size: 12.5px; color: #4F564D">{{c.when}} · {{c.who}}</span>
+</div>
+<div style="font-weight: 700; font-size: 14.5px; margin-top: 4px">{{c.subject}}</div>
+<div style="font-size: 13.5px; color: #2B3A31; margin-top: 2px; line-height: 1.45">{{c.snippet}}</div>
+<sc-if value="{{c.hasDraft}}" hint-placeholder-val="{{ false }}">
+<button class="back" onClick="{{c.toggle}}">{{c.draftLabel}}</button>
+</sc-if>
+<sc-if value="{{c.draftOpen}}" hint-placeholder-val="{{ false }}">
+<div style="background: #F7F5EF; border: 1px dashed #B9B2A2; border-radius: 10px; padding: 12px 14px; margin-top: 6px">
+<div style="font-size: 11.5px; font-weight: 700; color: #7A3410; letter-spacing: 0.4px; text-transform: uppercase">Draft saved to your Outlook Drafts · not sent</div>
+<div style="font-size: 14px; line-height: 1.5; margin-top: 6px">{{c.draft}}</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{noAcctComms}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 10px 0 0; font-size: 14px; color: #4F564D">No emails or meetings with this customer yet.</p>
+</sc-if>
+</section>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isData}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">Sales, stock &amp; orders</h1>
+<p style="margin: 4px 0 0; font-size: 15px; color: #4F564D">Read-only from SAP HANA through the Power BI semantic models · data as of 06:00 today · illustrative figures</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px">
+<sc-for list="{{dataKpis}}" as="k" hint-placeholder-count="4">
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 12px; padding: 16px 18px">
+<div style="font-size: 13px; color: #4F564D">{{k.label}}</div>
+<div style="font-family: Archivo, sans-serif; font-weight: 700; font-size: 26px; color: #1F3B2C; margin-top: 4px">{{k.value}}</div>
+<div style="font-size: 12.5px; color: #5A6158; margin-top: 2px">{{k.note}}</div>
+</div>
+</sc-for>
+</div>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<h2 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 600; font-size: 18px; color: #1F3B2C">Stock on hand</h2>
+<div style="overflow-x: auto; border: 1px solid #E2DED3; border-radius: 12px">
+<table class="tbl">
+<thead><tr><th>Product</th><th>On hand (t)</th><th>On open orders (t)</th><th>Available (t)</th><th>Weeks of cover</th></tr></thead>
+<tbody>
+<sc-for list="{{stock}}" as="s" hint-placeholder-count="4">
+<tr><td style="font-weight: 600">{{s.name}}</td><td>{{s.onHand}}</td><td>{{s.alloc}}</td><td style="font-weight: 600">{{s.avail}}</td><td>{{s.cover}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+<section style="display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px">
+<h2 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 600; font-size: 18px; color: #1F3B2C">Current orders</h2>
+<span style="font-size: 13px; color: #4F564D">Showing 5 of 14 open orders</span>
+</div>
+<div style="overflow-x: auto; border: 1px solid #E2DED3; border-radius: 12px">
+<table class="tbl">
+<thead><tr><th>Order</th><th>Customer</th><th>Product</th><th>Quantity</th><th>Delivery</th><th>Status</th></tr></thead>
+<tbody>
+<sc-for list="{{orders}}" as="o" hint-placeholder-count="5">
+<tr><td style="font-weight: 600">{{o.no}}</td><td><button class="lnk" onClick="{{o.open}}">{{o.cust}}</button></td><td>{{o.product}}</td><td>{{o.qty}}</td><td>{{o.date}}</td><td>{{o.status}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</section>
+<p style="margin: 0; font-size: 13px; color: #4F564D">Sales history and run rate per customer sit on each account page. Nothing here is edited in the CRM: SAP stays the system of record.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{isComms}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px; max-width: 900px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">Customer comms</h1>
+<p style="margin: 4px 0 0; font-size: 15px; color: #4F564D">Emails and Teams meetings with customer contacts, matched to accounts through Microsoft Graph. Your mailbox only.</p>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 4px 20px 12px">
+<sc-for list="{{allComms}}" as="c" hint-placeholder-count="5">
+<div style="padding: 12px 0; border-bottom: 1px solid #EFECE4">
+<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+<span style="font-size: 11.5px; font-weight: 700; padding: 2px 7px; border-radius: 5px; background: {{c.kindBg}}; color: {{c.kindFg}}">{{c.kind}}</span>
+<button class="lnk" onClick="{{c.openAcc}}" style="font-size: 13.5px">{{c.accName}}</button>
+<span style="font-size: 12.5px; color: #4F564D">{{c.when}} · {{c.who}}</span>
+</div>
+<div style="font-weight: 700; font-size: 15px; margin-top: 4px">{{c.subject}}</div>
+<div style="font-size: 14px; color: #2B3A31; margin-top: 2px; line-height: 1.45">{{c.snippet}}</div>
+<sc-if value="{{c.hasDraft}}" hint-placeholder-val="{{ false }}">
+<button class="back" onClick="{{c.toggle}}">{{c.draftLabel}}</button>
+</sc-if>
+<sc-if value="{{c.draftOpen}}" hint-placeholder-val="{{ false }}">
+<div style="background: #F7F5EF; border: 1px dashed #B9B2A2; border-radius: 10px; padding: 12px 14px; margin-top: 6px">
+<div style="font-size: 11.5px; font-weight: 700; color: #7A3410; letter-spacing: 0.4px; text-transform: uppercase">Draft saved to your Outlook Drafts · not sent</div>
+<div style="font-size: 14px; line-height: 1.5; margin-top: 6px">{{c.draft}}</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 13px; color: #4F564D">Teams summaries come from meeting transcripts, so they only appear where transcription was on. Drafts are written by the sales agent (Stage 3) and sent only by you, from Outlook.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{isDeal}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<button class="back" onClick="{{goPipeline}}" style="align-self: flex-start">← Pipeline</button>
+<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">{{deal.name}}</h1>
+<p style="margin: 4px 0 0; font-size: 15px"><button class="lnk" onClick="{{deal.openAcc}}">{{deal.accName}}</button><span style="color: #4F564D"> · Owner {{deal.owner}}</span></p>
+</div>
+<div style="font-family: Archivo, sans-serif; font-weight: 700; font-size: 24px; color: #1F3B2C">{{deal.valueFmt}}<span style="font-size: 14px; color: #4F564D; font-weight: 500"> / yr</span></div>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{steps}}" as="s" hint-placeholder-count="6">
+<div class="{{s.cls}}">{{s.name}}</div>
+</sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px">
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<h2 style="margin: 0 0 10px; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">Details</h2>
+<sc-for list="{{dealFields}}" as="f" hint-placeholder-count="6">
+<div style="display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; border-top: 1px solid #EFECE4; font-size: 14.5px">
+<span style="color: #4F564D">{{f.k}}</span>
+<span style="font-weight: 600; text-align: right">{{f.v}}</span>
+</div>
+</sc-for>
+</section>
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<h2 style="margin: 0 0 10px; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">Timeline</h2>
+<sc-for list="{{deal.timeline}}" as="t" hint-placeholder-count="3">
+<div style="display: flex; gap: 12px; padding: 9px 0; border-top: 1px solid #EFECE4">
+<span style="flex: none; width: 52px; font-size: 13px; font-weight: 600; color: #1F3B2C">{{t.when}}</span>
+<div>
+<div style="font-size: 14.5px; line-height: 1.4">{{t.what}}</div>
+<div style="font-size: 12.5px; color: #5A6158">{{t.who}}</div>
+</div>
+</div>
+</sc-for>
+<label style="display: block; margin-top: 12px; font-size: 13px; color: #4F564D">Add a note
+<textarea rows="2" placeholder="What happened?" style="display: block; width: 100%; box-sizing: border-box; margin-top: 4px; border: 1px solid #D6D1C4; border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 14px; resize: vertical"></textarea>
+</label>
+</section>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isActivities}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">Activities · My day</h1>
+<p style="margin: 4px 0 0; font-size: 15px; color: #4F564D">Calls, emails and site visits with due dates. Tick one off to complete it.</p>
+</div>
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 6px 20px">
+<sc-for list="{{acts}}" as="a" hint-placeholder-count="5">
+<label style="display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #EFECE4; cursor: pointer">
+<input type="checkbox" checked="{{a.done}}" onChange="{{a.toggle}}" style="width: 20px; height: 20px; margin-top: 2px; accent-color: #1F3B2C">
+<span style="flex: 1">
+<span style="display: block; font-weight: 600; font-size: 15px; text-decoration: {{a.strike}}">{{a.type}}: {{a.what}}</span>
+<span style="display: block; font-size: 13px; color: #4F564D">{{a.acc}}</span>
+</span>
+<span style="flex: none; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 6px; background: {{a.dueBg}}; color: {{a.dueFg}}">{{a.due}}</span>
+</label>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isProducts}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">Price list</h1>
+<p style="margin: 4px 0 0; font-size: 15px; color: #4F564D">Products by format and grade. Deal line items pull these list prices. Prices are placeholders.</p>
+</div>
+<div style="overflow-x: auto; border: 1px solid #E2DED3; border-radius: 12px">
+<table class="tbl">
+<thead><tr><th>Product</th><th>Format</th><th>Grade</th><th>Unit</th><th>List price</th></tr></thead>
+<tbody>
+<sc-for list="{{products}}" as="p" hint-placeholder-count="4">
+<tr><td style="font-weight: 600">{{p.name}}</td><td>{{p.format}}</td><td>{{p.grade}}</td><td>{{p.unit}}</td><td style="font-weight: 600">{{p.price}}</td></tr>
+</sc-for>
+</tbody>
+</table>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isDashboard}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">Dashboard</h1>
+<p style="margin: 4px 0 0; font-size: 15px; color: #4F564D">Sales health at a glance · illustrative figures</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px">
+<sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 12px; padding: 16px 18px">
+<div style="font-size: 13px; color: #4F564D">{{k.label}}</div>
+<div style="font-family: Archivo, sans-serif; font-weight: 700; font-size: 26px; color: #1F3B2C; margin-top: 4px">{{k.value}}</div>
+<div style="font-size: 12.5px; color: #5A6158; margin-top: 2px">{{k.note}}</div>
+</div>
+</sc-for>
+</div>
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<h2 style="margin: 0 0 14px; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">Open pipeline by stage (NZ$)</h2>
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="5">
+<div style="display: grid; grid-template-columns: 140px minmax(0, 1fr) 110px; gap: 12px; align-items: center; padding: 6px 0; font-size: 14px">
+<span style="color: #2B3A31">{{b.name}}</span>
+<div style="background: #F0EDE5; border-radius: 6px; height: 14px">
+<div style="height: 14px; border-radius: 6px; background: #1F3B2C; width: {{b.pct}}%"></div>
+</div>
+<span style="text-align: right; font-weight: 600">{{b.totalFmt}}</span>
+</div>
+</sc-for>
+</section>
+</div>
+</sc-if>
+
+<sc-if value="{{isPlanned}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px; max-width: 760px">
+<button class="back" onClick="{{goHome}}" style="align-self: flex-start">← Home</button>
+<span style="align-self: flex-start; font-size: 12.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; background: #F3E3D7; color: #7A3410">{{plan.stage}} · planned</span>
+<div>
+<h1 style="margin: 0; font-family: Archivo, sans-serif; font-weight: 700; font-size: 28px; color: #1F3B2C">{{plan.label}}</h1>
+<p style="margin: 8px 0 0; font-size: 16px; color: #2B3A31; line-height: 1.5">{{plan.desc}}</p>
+</div>
+<section style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 18px 20px">
+<h2 style="margin: 0 0 6px; font-family: Archivo, sans-serif; font-weight: 600; font-size: 17px; color: #1F3B2C">What it will do</h2>
+<ul style="margin: 0; padding-left: 20px; font-size: 15px; line-height: 1.7">
+<sc-for list="{{plan.bullets}}" as="b" hint-placeholder-count="3">
+<li>{{b.t}}</li>
+</sc-for>
+</ul>
+</section>
+<section style="background: #1F3B2C; color: #FFFFFF; border-radius: 14px; padding: 18px 20px">
+<div style="font-size: 12.5px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #F6C46A">Example</div>
+<p style="margin: 6px 0 0; font-size: 16px; line-height: 1.5">{{plan.example}}</p>
+</section>
+</div>
+</sc-if>
+
+</main>
+</div>
+
+<sc-if value="{{chatClosed}}" hint-placeholder-val="{{ true }}">
+<button class="launch" onClick="{{openChat}}"><svg width="18" height="18" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 1l2.4 6.6L20 10l-6.6 2.4L11 19l-2.4-6.6L2 10l6.6-2.4z" fill="#F6C46A"></path></svg>Ask Roland</button>
+</sc-if>
+
+<sc-if value="{{chatOpen}}" hint-placeholder-val="{{ false }}">
+<section aria-label="Ask Roland" style="position: fixed; right: 20px; bottom: 20px; z-index: 30; width: 410px; max-width: calc(100vw - 40px); height: 620px; max-height: calc(100vh - 40px); background: #FFFFFF; border: 1px solid #D6D1C4; border-radius: 16px; box-shadow: 0 12px 32px rgba(20,30,24,0.22); display: flex; flex-direction: column; overflow: hidden">
+<div style="background: #1F3B2C; color: #FFFFFF; padding: 12px 10px 12px 18px; display: flex; align-items: center; gap: 10px">
+<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 1l2.4 6.6L20 10l-6.6 2.4L11 19l-2.4-6.6L2 10l6.6-2.4z" fill="#F6C46A"></path></svg>
+<div style="flex: 1; line-height: 1.15">
+<div style="font-family: Archivo, sans-serif; font-weight: 700; font-size: 18px">Roland</div>
+<div style="font-size: 12px; color: #D7E2D9">Your sales assistant · mock answers</div>
+</div>
+<button class="iconbtn" aria-label="Start a new chat" onClick="{{resetChat}}" style="font-size: 14px; width: auto; padding: 0 10px">New chat</button>
+<button class="iconbtn" aria-label="Close Ask Roland" onClick="{{closeChat}}">×</button>
+</div>
+
+<div style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column-reverse; gap: 12px; background: #FAF8F3">
+<sc-if value="{{thinking}}" hint-placeholder-val="{{ false }}">
+<div style="align-self: flex-start; background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px 14px 14px 4px; padding: 10px 14px; font-size: 14px; color: #4F564D">Roland is checking the CRM, SAP and Outlook…</div>
+</sc-if>
+<sc-for list="{{msgsRev}}" as="m" hint-placeholder-count="2">
+<sc-if value="{{m.isUser}}" hint-placeholder-val="{{ false }}">
+<div style="align-self: flex-end; max-width: 85%; background: #1F3B2C; color: #FFFFFF; border-radius: 14px 14px 4px 14px; padding: 10px 14px; font-size: 14.5px; line-height: 1.45">{{m.text}}</div>
+</sc-if>
+<sc-if value="{{m.isRoland}}" hint-placeholder-val="{{ true }}">
+<div style="align-self: flex-start; max-width: 92%; background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px 14px 14px 4px; padding: 11px 14px">
+<div style="font-size: 14.5px; line-height: 1.5; white-space: pre-line; color: #1C2620">{{m.text}}</div>
+<sc-if value="{{m.hasSrc}}" hint-placeholder-val="{{ true }}">
+<div style="margin-top: 8px; padding-top: 7px; border-top: 1px solid #EFECE4; font-size: 12px; color: #5A6158">{{m.src}}</div>
+</sc-if>
+</div>
+</sc-if>
+</sc-for>
+<sc-if value="{{chatEmpty}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="background: #FFFFFF; border: 1px solid #E2DED3; border-radius: 14px; padding: 14px 16px; font-size: 14.5px; line-height: 1.5">Kia ora, I'm Roland. Ask me about a customer, a deal, stock, orders or your emails, and I'll pull it together from the CRM, SAP and Outlook.</div>
+<div style="font-size: 12.5px; font-weight: 700; color: #4F564D; letter-spacing: 0.4px; text-transform: uppercase">Try asking</div>
+<sc-for list="{{sugg}}" as="s" hint-placeholder-count="4">
+<button class="chip" onClick="{{s.ask}}">{{s.q}}</button>
+</sc-for>
+</div>
+</sc-if>
+</div>
+
+<div style="border-top: 1px solid #E2DED3; padding: 12px; display: flex; gap: 8px; background: #FFFFFF">
+<label style="flex: 1; display: block">
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Ask Roland a question</span>
+<input type="text" value="{{chatQ}}" onChange="{{onChatQ}}" onKeyDown="{{onChatKey}}" placeholder="Ask Roland anything…" style="width: 100%; box-sizing: border-box; height: 44px; border: 1px solid #CFC9BA; border-radius: 10px; padding: 0 12px; font: inherit; font-size: 15px">
+</label>
+<button onClick="{{sendChat}}" style="height: 44px; padding: 0 16px; border: 0; border-radius: 10px; background: #D9682B; color: #1C1208; font: inherit; font-weight: 700; font-size: 14.5px; cursor: pointer">Ask</button>
+</div>
+<div style="padding: 0 14px 10px; font-size: 11.5px; color: #5A6158; background: #FFFFFF">Roland drafts and suggests; you decide and send. Mock: scripted answers only.</div>
+</section>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { view: 'home', dealId: 'd1', accId: 'kv', planId: 'agreements', done: { a6: true }, drafts: {}, chatOpen: false, msgs: [], chatQ: '', thinking: false };
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var go = function (v) { return function () { self.setState({ view: v }); }; };
+    var nz = function (n) { return 'NZ$' + Math.round(n).toLocaleString('en-NZ'); };
+    var short = function (n) { return n >= 1000000 ? 'NZ$' + (n / 1000000).toFixed(2) + 'm' : 'NZ$' + Math.round(n / 1000) + 'k'; };
+    var tf = function (t) { return t.toLocaleString('en-NZ') + ' t/yr'; };
+
+    var ACC = [
+      { id: 'kv', name: 'Kowhai Valley Dairy Co.', seg: 'Industrial heat', region: 'Canterbury', t: 4800, owner: 'Kirsten', status: 'Prospect' },
+      { id: 'sh', name: 'Southern Hearth Merchants', seg: 'Merchant / retail', region: 'South Island, 34 stores', t: 2600, owner: 'Rep B', status: 'Customer' },
+      { id: 'tr', name: 'Totara Rest Home Group', seg: 'Commercial heat', region: 'Southland', t: 310, owner: 'Kirsten', status: 'Customer' },
+      { id: 'rb', name: 'Ruru Bay School', seg: 'Commercial heat', region: 'Otago', t: 120, owner: 'Rep B', status: 'Customer' },
+      { id: 'lm', name: 'Lakeside Motor Inn', seg: 'Hospitality', region: 'Taupō', t: 80, owner: 'Kirsten', status: 'Lead' },
+      { id: 'kc', name: 'Kauri Cove Lodge', seg: 'Hospitality', region: 'Northland', t: 60, owner: 'Rep B', status: 'Customer' },
+      { id: 'ha', name: 'Harbourside Aquatic Centre', seg: 'Commercial heat', region: 'Nelson', t: 200, owner: 'Kirsten', status: 'Lost' }
+    ];
+    var accName = function (id) { var a = ACC.filter(function (x) { return x.id === id; })[0]; return a ? a.name : ''; };
+    var CON = [
+      { acc: 'kv', name: 'Mere Tane', title: 'Site Energy Manager', role: 'Decision maker' },
+      { acc: 'kv', name: 'Liam Chen', title: 'Procurement Lead', role: 'Influencer (price)' },
+      { acc: 'sh', name: 'Grace Moana', title: 'Category Buyer, Heating', role: 'Decision maker' },
+      { acc: 'tr', name: 'Peter Vos', title: 'Facilities Manager', role: 'Decision maker' },
+      { acc: 'rb', name: 'Aroha Whitu', title: 'Business Manager', role: 'Decision maker' },
+      { acc: 'lm', name: 'Sam Rewi', title: 'Owner', role: 'Decision maker' },
+      { acc: 'kc', name: 'Jo Hartley', title: 'General Manager', role: 'Decision maker' }
+    ];
+    var STAGES = ['Lead', 'Qualified', 'Technical review', 'Proposal sent', 'Negotiation', 'Won'];
+    var ROT = { 'Lead': 21, 'Qualified': 14, 'Technical review': 14, 'Proposal sent': 10, 'Negotiation': 7, 'Won': 9999 };
+    var DEALS = [
+      { id: 'd1', name: 'Boiler conversion supply, 3-yr', acc: 'kv', stage: 'Technical review', t: 4800, v: 2064000, close: '28 Feb 2027', owner: 'Kirsten', next: 'Site visit 21 Oct: silo access for 30 t trucks', idle: 2, prob: 40, product: 'Industrial grade, bulk', timeline: [
+        { when: '8 Oct', who: 'Kirsten · call', what: 'Spoke with Mere Tane: two boilers, about 4,800 t/yr' },
+        { when: '2 Oct', who: 'Kirsten', what: 'Moved from Qualified to Technical review' },
+        { when: '24 Sep', who: 'Kirsten · note', what: 'Wants FSC chain-of-custody certificate with the tender' },
+        { when: '11 Sep', who: 'Website form', what: 'Deal created from website enquiry' } ] },
+      { id: 'd2', name: 'Winter 2027 bagged range', acc: 'sh', stage: 'Proposal sent', t: 600, v: 312000, close: '15 Dec 2026', owner: 'Rep B', next: 'Chase quote feedback', idle: 12, prob: 60, product: 'Premium A1, 1 t bulk bags', timeline: [
+        { when: '27 Sep', who: 'Rep B · email', what: 'Quote sent: 600 t across 34 stores' },
+        { when: '6 Oct', who: 'Rep B · call', what: 'Confirmed May to Aug bag volumes' } ] },
+      { id: 'd3', name: 'Annual renewal', acc: 'rb', stage: 'Negotiation', t: 120, v: 55200, close: '30 Nov 2026', owner: 'Rep B', next: 'Confirm price review clause', idle: 3, prob: 80, product: 'Premium A1, bulk blown', timeline: [
+        { when: '6 Oct', who: 'Rep B · meeting', what: 'Board happy with price; asked for an annual review clause' } ] },
+      { id: 'd4', name: 'Boiler upgrade supply', acc: 'tr', stage: 'Qualified', t: 310, v: 142600, close: '31 Mar 2027', owner: 'Kirsten', next: 'Book site visit', idle: 6, prob: 20, product: 'Premium A1, bulk blown', timeline: [
+        { when: '3 Oct', who: 'Kirsten · call', what: 'Upgrading two sites; decision by March' } ] },
+      { id: 'd5', name: 'Pellet boiler enquiry', acc: 'lm', stage: 'Lead', t: 80, v: 36800, close: '30 Apr 2027', owner: 'Kirsten', next: 'Intro call', idle: 1, prob: 5, product: 'Premium A1, bulk blown', timeline: [
+        { when: '8 Oct', who: 'Website form', what: 'Enquiry: replacing LPG for pool and hot water' } ] },
+      { id: 'd6', name: 'Winter supply 2026', acc: 'kc', stage: 'Won', t: 60, v: 27600, close: 'Won 2 Sep 2026', owner: 'Rep B', next: 'Handed to logistics', idle: 0, prob: 100, product: 'Premium A1, bulk blown', timeline: [
+        { when: '2 Sep', who: 'Rep B', what: 'Contract signed; handed to logistics' } ] }
+    ];
+    var withD = function (d) {
+      return Object.assign({}, d, {
+        accName: accName(d.acc), valueFmt: short(d.v), tFmt: tf(d.t),
+        stalled: d.idle > ROT[d.stage],
+        open: function () { self.setState({ view: 'deal', dealId: d.id }); },
+        openAcc: function () { self.setState({ view: 'account', accId: d.acc }); }
+      });
+    };
+    var open = DEALS.filter(function (d) { return d.stage !== 'Won'; });
+    var openV = open.reduce(function (s, d) { return s + d.v; }, 0);
+    var openT = open.reduce(function (s, d) { return s + d.t; }, 0);
+
+    var ACTS = [
+      { id: 'a1', due: 'Overdue · 7 Oct', type: 'Call', what: 'Chase quote feedback', acc: 'Southern Hearth Merchants', kind: 'over' },
+      { id: 'a2', due: 'Today', type: 'Call', what: 'Intro call with Sam Rewi', acc: 'Lakeside Motor Inn', kind: 'today' },
+      { id: 'a3', due: 'Today', type: 'Email', what: 'Send FSC certificate pack', acc: 'Kowhai Valley Dairy Co.', kind: 'today' },
+      { id: 'a4', due: 'Tue 21 Oct', type: 'Site visit', what: 'Check silo access for 30 t trucks', acc: 'Kowhai Valley Dairy Co.', kind: 'later' },
+      { id: 'a5', due: 'Tue 28 Oct', type: 'Call', what: 'Renewal quote reminder', acc: 'Ruru Bay School', kind: 'later' },
+      { id: 'a6', due: 'Done · 6 Oct', type: 'Call', what: 'Confirmed May to Aug bag volumes', acc: 'Southern Hearth Merchants', kind: 'done' }
+    ];
+    var COLORS = { over: ['#FBE3D6', '#8F3A0F'], today: ['#DCE8DD', '#1F3B2C'], later: ['#ECE9E0', '#4F564D'], done: ['#ECE9E0', '#5A6158'] };
+    var acts = ACTS.map(function (a) {
+      var done = !!st.done[a.id];
+      return Object.assign({}, a, {
+        done: done, strike: done ? 'line-through' : 'none',
+        dueBg: COLORS[a.kind][0], dueFg: COLORS[a.kind][1],
+        toggle: function () { var m = Object.assign({}, self.state.done); m[a.id] = !m[a.id]; self.setState({ done: m }); }
+      });
+    });
+
+    var PLANS = {
+      agreements: { label: 'Supply agreements', stage: 'Stage 2', desc: 'Track contracted versus delivered tonnes on every live supply contract, so run-rate business is as visible as new deals.', bullets: ['Term, price review dates and renewal alerts', 'Planned tonnes per month against actual deliveries', 'Flags accounts running more than 10% under plan'], example: 'Southern Hearth Merchants, September: 380 t delivered of 400 t planned (95%). Price review due 1 March 2027.' },
+      quotes: { label: 'Quotes', stage: 'Stage 2', desc: 'Generate a branded quote from a deal in one click, using the price list and delivery zone.', bullets: ['Line items pulled from the price list', 'Terms, validity and delivery zone on the PDF', 'Quote status tracked on the deal timeline'], example: 'Quote Q-2026-041 · 4,800 t/yr industrial grade · 3-year term · valid 30 days.' },
+      forecast: { label: 'Forecast', stage: 'Stage 2', desc: 'Revenue and tonnes forecast from supply agreements plus the weighted pipeline.', bullets: ['By month, product, region and rep', 'Run-rate and new business shown separately', 'Feeds the group Power BI reports'], example: 'Q1 2027: 11,200 t (8,900 run-rate + 2,300 weighted new business).' },
+      automation: { label: 'Automation rules', stage: 'Stage 2', desc: 'Rules that create tasks and alerts when something happens, so handovers are never missed.', bullets: ['Triggers on stage changes, dates and idle time', 'Creates tasks for sales, logistics or finance', 'Configurable by NF without code'], example: 'Deal moves to Won → create onboarding tasks for logistics and a first-delivery check-in call.' },
+      agent: { label: 'CRM sales agent', stage: 'Stage 3', desc: 'An AI sales assistant that summarises, drafts and flags. A person always approves before anything is sent or changed.', bullets: ['Weekly stalled-deal digest with draft follow-ups', 'One-paragraph account brief before a call, including SAP sales and open orders', 'Summarises Teams meeting transcripts onto the deal timeline', 'Reads inbound enquiries and opens a draft lead'], example: '“Southern Hearth Merchants has been quiet for 12 days at Proposal sent. A follow-up draft is ready for Rep B to review.”' },
+      drafts: { label: 'Reply drafts in Outlook', stage: 'Stage 3', desc: 'The agent drafts replies to customer emails and Teams follow-ups and saves them to the rep’s Outlook Drafts folder. Nothing is sent without the rep.', bullets: ['Uses the email thread, account history and SAP order status', 'Saved to Outlook Drafts, never sent automatically', 'Rep edits and sends from Outlook as normal'], example: 'Grace Moana asks to hold pricing to the end of November. Draft ready: confirms the hold, notes her 3 open orders and offers a call next week.' },
+      partners: { label: 'Distributor management', stage: 'Stage 3', desc: 'Manage merchants and distributors with tiered pricing and sell-through visibility.', bullets: ['Price tier per partner', 'Store network and sell-through', 'Joint deals with partners'], example: 'Southern Hearth Merchants · Tier B pricing · 34 stores · winter pre-orders due 30 April.' },
+    };
+
+    var MONTHS = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
+    var SHAPE = [60, 40, 30, 45, 120, 310, 420, 450, 380, 260, 175, 120];
+    var SAP = {
+      sh: { custNo: '100482', t12: 2410, v12: 'NZ$1.18m', orders: '3 open · 640 t' },
+      tr: { custNo: '100517', t12: 296, v12: 'NZ$136k', orders: '1 open · 30 t' },
+      rb: { custNo: '100733', t12: 118, v12: 'NZ$54k', orders: '1 open · 12 t' },
+      kc: { custNo: '100902', t12: 58, v12: 'NZ$27k', orders: 'None open' }
+    };
+    var sapFor = function (id) {
+      var s = SAP[id];
+      if (!s) { return { has: false, none: true, fields: [], months: [], asOf: '' }; }
+      var scale = s.t12 / 2410;
+      var vals = SHAPE.map(function (v) { return Math.round(v * scale); });
+      var mx = Math.max.apply(null, vals);
+      return {
+        has: true, none: false,
+        fields: [
+          { k: 'SAP customer no.', v: s.custNo },
+          { k: 'Sales, last 12 months', v: s.t12.toLocaleString('en-NZ') + ' t · ' + s.v12 },
+          { k: 'Run rate (12-month average)', v: Math.round(s.t12 / 12) + ' t/month' },
+          { k: 'Current orders', v: s.orders },
+          { k: 'Credit status', v: 'Within terms' }
+        ],
+        months: vals.map(function (v, i) { return { m: MONTHS.at(i).charAt(0), label: MONTHS.at(i) + ': ' + v + ' t', pct: Math.max(3, Math.round(v / mx * 100)) }; }),
+        asOf: 'Source: SAP HANA via Power BI semantic model · data as of 06:00 today · illustrative'
+      };
+    };
+    var KIND = { 'Email in': ['#DCE6EF', '#1E3E5C'], 'Email out': ['#ECE9E0', '#4F564D'], 'Teams meeting': ['#E4DEF0', '#3B2A63'] };
+    var COMMS = [
+      { id: 'c5', acc: 'kv', kind: 'Email in', when: '8 Oct', who: 'Liam Chen', subject: 'Tender documents', snippet: 'Please send your FSC certificate and DINplus test results with the tender response.', draft: 'Hi Liam, thanks for the tender pack. Attached are our FSC chain-of-custody certificate and the latest DINplus A1 test results. Looking forward to the site visit on 21 October. Regards, Kirsten' },
+      { id: 'c4', acc: 'kv', kind: 'Teams meeting', when: '8 Oct', who: 'Mere Tane, Liam Chen, Kirsten · 40 min', subject: 'Boiler conversion scoping', snippet: 'Transcript summary: two boilers, about 4,800 t/yr; site visit booked for 21 Oct; FSC chain-of-custody needed for the tender.' },
+      { id: 'c1', acc: 'sh', kind: 'Email in', when: '7 Oct', who: 'Grace Moana', subject: 'Re: Winter 2027 quote', snippet: 'Can you hold this pricing until the end of November while we confirm store numbers?', draft: 'Hi Grace, happy to hold the Winter 2027 pricing until 30 November. Your 3 current orders (640 t) are on schedule. Could we confirm store numbers on a quick call next week? Kind regards, Rep B' },
+      { id: 'c2', acc: 'sh', kind: 'Teams meeting', when: '6 Oct', who: 'Grace Moana, Rep B · 25 min', subject: 'Winter volumes call', snippet: 'Transcript summary: confirmed May to Aug bag volumes; asked about delivery to three new stores; wants pricing held.' },
+      { id: 'c6', acc: 'rb', kind: 'Email in', when: '6 Oct', who: 'Aroha Whitu', subject: 'Renewal: price review clause', snippet: 'The board is happy with the price but would like an annual review clause.', draft: 'Kia ora Aroha, thanks for confirming. We can add an annual price review each March, and I will send the updated agreement this week. Ngā mihi, Rep B' },
+      { id: 'c3', acc: 'sh', kind: 'Email out', when: '27 Sep', who: 'Rep B', subject: 'Winter 2027 quote', snippet: 'Quote attached: 600 t of 1 t bulk bags across 34 stores.' }
+    ];
+    var commOf = function (c) {
+      var open = !!st.drafts[c.id];
+      return Object.assign({}, c, {
+        accName: accName(c.acc), kindBg: KIND[c.kind][0], kindFg: KIND[c.kind][1],
+        hasDraft: !!c.draft, draftOpen: open && !!c.draft,
+        draftLabel: open ? 'Hide draft reply' : 'Draft a reply',
+        toggle: function () { var m = Object.assign({}, self.state.drafts); m[c.id] = !m[c.id]; self.setState({ drafts: m }); },
+        openAcc: function () { self.setState({ view: 'account', accId: c.acc }); }
+      });
+    };
+    var acctOpen = function (id) { return function () { self.setState({ view: 'account', accId: id }); }; };
+
+    var ANSWERS = [
+      { re: /attention|stalled|this week|at risk|call today|who should/, text: 'One deal needs you now: Winter 2027 bagged range (Southern Hearth Merchants, NZ$312k) has sat at Proposal sent for 12 days, past the 10-day limit.\n\nGood news: Grace Moana replied on 7 Oct asking to hold pricing to 30 November, and a reply draft is ready in Customer comms.\n\nAlso this week: send the FSC pack to Kowhai Valley today, and the silo-access site visit there on 21 Oct.', src: 'Sources: Roland pipeline and activities · Outlook' },
+      { re: /southern|hearth|grace/, text: 'Southern Hearth Merchants · merchant / retail, 34 South Island stores · Rep B\n\nLast 12 months: 2,410 t, NZ$1.18m. Run rate 201 t/month, peaking May to July.\nOpen orders: 3 (640 t). Next delivery SO-48211, 220 t on 14 Oct.\nOpen deal: Winter 2027 bagged range, 600 t, NZ$312k, at Proposal sent.\nLatest: Grace asked on 7 Oct to hold pricing until 30 November.', src: 'Sources: Roland · SAP via Power BI (06:00 today) · Outlook' },
+      { re: /stock|bag|promise|available|availability/, text: '15 kg bags: 300 t available to promise. That is 540 t on hand less 240 t already on open orders, about 2.4 weeks of cover.\n\nWorth checking with production before confirming Southern Hearth’s winter bag volumes.', src: 'Sources: SAP via Power BI · data as of 06:00 today' },
+      { re: /ruru|follow|draft|reply|email/, text: 'Here’s a draft for Aroha Whitu at Ruru Bay School:\n\n“Kia ora Aroha, thanks for confirming the renewal. We’re happy to add an annual price review each March, and I’ll send the updated agreement this week. Ngā mihi, Rep B”\n\nSaved to your Outlook Drafts. Nothing is sent until you send it.', src: 'Sources: Roland deal notes · Outlook thread of 6 Oct' },
+      { re: /kowhai|dairy|boiler|mere/, text: 'Kowhai Valley Dairy Co. · industrial heat, Canterbury · Kirsten\n\nOpen deal: boiler conversion supply, 4,800 t/yr over 3 years, about NZ$2.06m a year, at Technical review (40%).\nNext step: silo-access site visit on 21 Oct.\nFrom the 8 Oct Teams call: two boilers; FSC chain-of-custody certificate needed for the tender.', src: 'Sources: Roland · Teams transcript summary · Outlook' }
+    ];
+    var answerFor = function (q) {
+      var t = q.toLowerCase();
+      for (var i = 0; i < ANSWERS.length; i++) { if (ANSWERS.at(i).re.test(t)) { return ANSWERS.at(i); } }
+      return { text: 'Good question. In the full build I’d answer this from Roland’s records, SAP data via Power BI, and your Outlook and Teams.\n\nIn this mock I can answer the suggested questions, or questions about Southern Hearth, Kowhai Valley, stock or stalled deals.', src: '' };
+    };
+    var ask = function (text) {
+      var q = (text || '').trim();
+      if (!q || self.state.thinking) { return; }
+      self.setState({ chatOpen: true, chatQ: '', thinking: true, msgs: self.state.msgs.concat([{ role: 'user', text: q }]) });
+      setTimeout(function () {
+        var a = answerFor(q);
+        self.setState({ thinking: false, msgs: self.state.msgs.concat([{ role: 'roland', text: a.text, src: a.src }]) });
+      }, 800);
+    };
+    var SUGG = ['Who should I call today?', 'Brief me on Southern Hearth Merchants', 'How much 15 kg bag stock can we promise?', 'Draft a follow-up to Ruru Bay School'];
+
+    var navOf = { deal: 'pipeline', account: 'accounts' };
+    var cur = navOf[st.view] || (st.view === 'planned' ? 'plan-' + st.planId : st.view);
+    var item = function (id, label, desc, mode, badge) {
+      var planned = mode === 'planned';
+      var key = planned ? 'plan-' + id : id;
+      return {
+        label: label, desc: desc, planned: planned, preview: mode === 'preview', badge: badge || '',
+        cls: cur === key ? 'nav on' : 'nav',
+        go: planned ? function () { self.setState({ view: 'planned', planId: id }); } : go(id)
+      };
+    };
+    var tree = [
+      { name: 'Stage 1 · Core', tag: 'MVP', tagBg: '#DCE8DD', tagFg: '#1F3B2C', items: [
+        item('home', 'Home', 'Your day, key numbers and what needs attention'),
+        item('pipeline', 'Pipeline board', 'Deals by stage, with stalled-deal flags'),
+        item('accounts', 'Accounts & contacts', 'Customers, sites, people and history'),
+        item('activities', 'Activities · My day', 'Calls, emails and site visits with due dates'),
+        item('products', 'Price list', 'Products by format and grade'),
+        item('dashboard', 'Dashboard', 'Pipeline, wins and overdue work at a glance') ] },
+      { name: 'Stage 2 · Run-rate', tag: 'Planned', tagBg: '#F3E3D7', tagFg: '#7A3410', items: [
+        item('data', 'Sales, stock & orders', 'SAP data via the Power BI semantic models', 'preview', 'SAP'),
+        item('comms', 'Customer comms', 'Outlook emails and Teams meetings by account', 'preview', 'M365'),
+        item('agreements', 'Supply agreements', 'Contracted vs delivered tonnes', 'planned'),
+        item('quotes', 'Quotes', 'Branded quotes from a deal', 'planned'),
+        item('forecast', 'Forecast', 'SAP run rate plus weighted pipeline', 'planned'),
+        item('automation', 'Automation rules', 'Tasks and alerts on events', 'planned') ] },
+      { name: 'Stage 3 · AI & links', tag: 'Planned', tagBg: '#F3E3D7', tagFg: '#7A3410', items: [
+        item('agent', 'CRM sales agent', 'Summaries, drafts and flags for approval', 'planned'),
+        item('drafts', 'Reply drafts in Outlook', 'Drafted replies for the rep to send', 'planned'),
+        item('partners', 'Distributor management', 'Merchants, tiers and sell-through', 'planned') ] }
+    ];
+
+    var columns = STAGES.map(function (s) {
+      var ds = DEALS.filter(function (d) { return d.stage === s; });
+      var tot = ds.reduce(function (a, d) { return a + d.v; }, 0);
+      return { name: s, count: ds.length + (ds.length === 1 ? ' deal' : ' deals'), totalFmt: short(tot), total: tot, deals: ds.map(withD) };
+    });
+    var maxOpen = Math.max.apply(null, columns.filter(function (c) { return c.name !== 'Won'; }).map(function (c) { return c.total; }));
+    var bars = columns.filter(function (c) { return c.name !== 'Won'; }).map(function (c) {
+      return { name: c.name, totalFmt: short(c.total), pct: maxOpen ? Math.max(2, Math.round(c.total / maxOpen * 100)) : 0 };
+    });
+
+    var deal = withD(DEALS.filter(function (d) { return d.id === st.dealId; })[0] || DEALS[0]);
+    var idx = STAGES.indexOf(deal.stage);
+    var steps = STAGES.map(function (s, i) { return { name: s, cls: i < idx ? 'step done' : (i === idx ? 'step cur' : 'step') }; });
+    var dealFields = [
+      { k: 'Stage', v: deal.stage + ' (' + deal.prob + '%)' },
+      { k: 'Volume', v: tf(deal.t) },
+      { k: 'Value', v: nz(deal.v) + ' / yr' },
+      { k: 'Product', v: deal.product },
+      { k: 'Expected close', v: deal.close },
+      { k: 'Next step', v: deal.next }
+    ];
+
+    var acctRaw = ACC.filter(function (a) { return a.id === st.accId; })[0] || ACC[0];
+    var acct = Object.assign({}, acctRaw, { tFmt: tf(acctRaw.t) });
+    var acctDeals = DEALS.filter(function (d) { return d.acc === acctRaw.id; }).map(withD);
+    var ST = { Customer: ['#DCE8DD', '#1F3B2C'], Prospect: ['#FBEBC9', '#6B4A00'], Lead: ['#ECE9E0', '#4F564D'], Lost: ['#F1E0DC', '#7A2A1A'] };
+
+    return {
+      tree: tree,
+      chatOpen: st.chatOpen, chatClosed: !st.chatOpen, thinking: st.thinking,
+      chatEmpty: st.msgs.length === 0 && !st.thinking,
+      msgsRev: st.msgs.slice().reverse().map(function (m) { return { text: m.text, src: m.src || '', hasSrc: !!m.src, isUser: m.role === 'user', isRoland: m.role === 'roland' }; }),
+      chatQ: st.chatQ,
+      sugg: SUGG.map(function (q) { return { q: q, ask: function () { ask(q); } }; }),
+      openChat: function () { self.setState({ chatOpen: true }); },
+      closeChat: function () { self.setState({ chatOpen: false }); },
+      resetChat: function () { self.setState({ msgs: [], thinking: false, chatQ: '' }); },
+      onChatQ: function (e) { self.setState({ chatQ: e.target.value }); },
+      onChatKey: function (e) { if (e.key === 'Enter') { e.preventDefault(); ask(self.state.chatQ); } },
+      sendChat: function () { ask(self.state.chatQ); },
+      isHome: st.view === 'home', isPipeline: st.view === 'pipeline', isAccounts: st.view === 'accounts',
+      isAccount: st.view === 'account', isDeal: st.view === 'deal', isActivities: st.view === 'activities',
+      isProducts: st.view === 'products', isDashboard: st.view === 'dashboard', isPlanned: st.view === 'planned',
+      isData: st.view === 'data', isComms: st.view === 'comms',
+      goHome: go('home'), goPipeline: go('pipeline'), goAccounts: go('accounts'), goActivities: go('activities'),
+      kpis: [
+        { label: 'Open pipeline', value: short(openV), note: open.length + ' open deals' },
+        { label: 'Volume in pipeline', value: openT.toLocaleString('en-NZ') + ' t', note: 'per year, if all won' },
+        { label: 'Won this quarter', value: 'NZ$28k', note: '1 deal · 60 t/yr' },
+        { label: 'Stalled deals', value: '1', note: 'past their stage limit' },
+        { label: 'Stock on hand', value: '6,420 t', note: 'SAP via Power BI · 06:00' },
+        { label: 'Current orders', value: '14', note: '1,180 t to deliver · SAP' }
+      ],
+      dataKpis: [
+        { label: 'Stock on hand', value: '6,420 t', note: 'all products' },
+        { label: 'Available to promise', value: '5,240 t', note: 'after current orders' },
+        { label: 'Current orders', value: '14', note: '1,180 t to deliver' },
+        { label: 'Next refresh', value: '12:00', note: 'dataflow schedule' }
+      ],
+      stock: [
+        { name: 'Premium A1 · bulk', onHand: '2,150', alloc: '420', avail: '1,730', cover: '5.1' },
+        { name: 'Premium A1 · 1 t bulk bags', onHand: '980', alloc: '380', avail: '600', cover: '3.2' },
+        { name: 'Premium A1 · 15 kg bags', onHand: '540', alloc: '240', avail: '300', cover: '2.4' },
+        { name: 'Industrial grade · bulk', onHand: '2,750', alloc: '140', avail: '2,610', cover: '6.8' }
+      ],
+      orders: [
+        { no: 'SO-48226', cust: 'Ruru Bay School', acc: 'rb', product: 'Premium A1 · bulk', qty: '12 t', date: '13 Oct', status: 'Scheduled' },
+        { no: 'SO-48211', cust: 'Southern Hearth Merchants', acc: 'sh', product: 'Premium A1 · 1 t bulk bags', qty: '220 t', date: '14 Oct', status: 'Scheduled' },
+        { no: 'SO-48230', cust: 'Totara Rest Home Group', acc: 'tr', product: 'Premium A1 · bulk', qty: '30 t', date: '15 Oct', status: 'Scheduled' },
+        { no: 'SO-48207', cust: 'Southern Hearth Merchants', acc: 'sh', product: 'Premium A1 · 15 kg bags', qty: '240 t', date: '16 Oct', status: 'Picking' },
+        { no: 'SO-48195', cust: 'Southern Hearth Merchants', acc: 'sh', product: 'Premium A1 · 1 t bulk bags', qty: '180 t', date: '23 Oct', status: 'Scheduled' }
+      ].map(function (o) { return Object.assign({}, o, { open: acctOpen(o.acc) }); }),
+      allComms: COMMS.map(commOf),
+      acctSap: sapFor(st.accId),
+      acctComms: COMMS.filter(function (c) { return c.acc === st.accId; }).map(commOf),
+      noAcctComms: COMMS.filter(function (c) { return c.acc === st.accId; }).length === 0,
+      todayActs: acts.filter(function (a) { return a.kind === 'over' || a.kind === 'today'; }),
+      acts: acts,
+      stalled: DEALS.map(withD).filter(function (d) { return d.stalled; }),
+      pipeSummary: open.length + ' open deals · ' + short(openV) + ' · ' + openT.toLocaleString('en-NZ') + ' t/yr',
+      columns: columns, bars: bars,
+      accounts: ACC.map(function (a) {
+        return Object.assign({}, a, { tFmt: a.t.toLocaleString('en-NZ'), stBg: ST[a.status][0], stFg: ST[a.status][1],
+          open: function () { self.setState({ view: 'account', accId: a.id }); } });
+      }),
+      acct: acct,
+      acctContacts: CON.filter(function (c) { return c.acc === acctRaw.id; }),
+      acctDeals: acctDeals, noAcctDeals: acctDeals.length === 0,
+      deal: deal, steps: steps, dealFields: dealFields,
+      products: [
+        { name: 'Premium A1 pellets', format: 'Bulk, blown delivery', grade: 'DINplus A1', unit: 'per tonne delivered', price: 'NZ$460' },
+        { name: 'Premium A1 pellets', format: '1 t bulk bag', grade: 'DINplus A1', unit: 'per bag', price: 'NZ$520' },
+        { name: 'Premium A1 pellets', format: '15 kg bags, 70 per pallet', grade: 'DINplus A1', unit: 'per pallet', price: 'NZ$875' },
+        { name: 'Industrial grade pellets', format: 'Bulk, tipper delivery', grade: 'Industrial', unit: 'per tonne delivered', price: 'NZ$430' }
+      ],
+      plan: Object.assign({}, PLANS[st.planId] || PLANS.agreements, {
+        bullets: (PLANS[st.planId] || PLANS.agreements).bullets.map(function (t) { return { t: t }; })
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>
