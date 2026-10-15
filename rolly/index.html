@@ -2123,15 +2123,15 @@ textarea{display:block;width:100%;margin-top:4px;border:1px solid var(--line);bo
       : 'Friday 9 October 2026 · 3 tasks due today · 1 deal needs attention';
     return '<div class="hero">' + SWOOSH + '<h1>Kia ora' + (VIEWER.first ? ', ' + esc(VIEWER.first) : '') + '</h1><p>' + esc(sub) + '</p></div>' +
       kpiGrid(KPIS) +
+      '<div class="grid g-2">' +
+      '<section class="card"><div class="card-head"><h2>My day</h2>' + (REAL ? '<span class="pill pill-soon">sample</span>' : '') + '<button class="back" data-go="activities">All activities</button></div>' +
+      today.map(function (a) { return '<div class="row">' + actBadge(a) + '<div><div style="font-weight:600">' + esc(a.type) + ': ' + esc(a.what) + '</div><div class="small muted">' + esc(a.acc) + '</div></div></div>'; }).join('') + '</section>' +
+      quotesAttention() + prospectAttention() + attentionCard() + contractAttention() + '</div>' +
       '<section style="display:flex;flex-direction:column;gap:12px"><div class="card-head"><h2>Feature tree</h2><span class="small muted">Click any feature to open it</span></div>' +
       '<div class="grid g-3">' + tree().map(function (g) {
         return '<div class="stage-card"><div class="hd"><span>' + esc(g.name) + '</span><span class="tag ' + g.cls + '">' + esc(g.tag) + '</span></div>' +
           g.items.map(function (it) { return '<button class="feat" ' + navAttrs(it) + '><div class="t">' + esc(it.label) + '</div><div class="d">' + esc(it.desc) + '</div></button>'; }).join('') + '</div>';
-      }).join('') + '</div></section>' +
-      '<div class="grid g-2">' +
-      '<section class="card"><div class="card-head"><h2>My day</h2>' + (REAL ? '<span class="pill pill-soon">sample</span>' : '') + '<button class="back" data-go="activities">All activities</button></div>' +
-      today.map(function (a) { return '<div class="row">' + actBadge(a) + '<div><div style="font-weight:600">' + esc(a.type) + ': ' + esc(a.what) + '</div><div class="small muted">' + esc(a.acc) + '</div></div></div>'; }).join('') + '</section>' +
-      quotesAttention() + prospectAttention() + attentionCard() + contractAttention() + '</div>';
+      }).join('') + '</div></section>';
   }
   function vPipeline() {
     var pds = prospectDeals();
